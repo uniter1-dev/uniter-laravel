@@ -1,0 +1,62 @@
+{
+    "name": "php-uniter/php-uniter-laravel",
+    "description": "",
+    "keywords": [
+        "php-uniter",
+        "php-uniter-laravel"
+    ],
+    "homepage": "https://github.com/php-uniter/php-uniter-laravel.git",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Eduard Fomin",
+            "email": "eduard.fomin@uniter1.tech",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "illuminate/support": "^8.0",
+        "guzzlehttp/guzzle": "^7.0@dev",
+        "php-uniter/php-uniter-assistant": "*"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhpUniter\\PackageLaravel\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpUniter\\PackageLaravel\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PhpUniter\\PackageLaravel\\PhpUniterPackageLaravelServiceProvider"
+            ],
+            "aliases": {
+                "PhpUniterPackageLaravel": "PhpUniter\\PackageLaravel\\PhpUniterPackageLaravelFacade"
+            }
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/php-uniter/php-uniter-assistant.git"
+        }
+    ]
+}
