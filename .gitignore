@@ -3,9 +3,10 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
-# Node artifact files
+# Node/composer artifact files
 node_modules/
 dist/
+vendor/
 
 # Composer executable
 composer.phar
