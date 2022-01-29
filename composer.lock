@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e40c6671698cd9fb5a4ed94415386d2b",
+    "content-hash": "dcb494ee397fe170790e194df10375b9",
     "packages": [
         {
             "name": "brick/math",
@@ -1797,67 +1797,6 @@
                 "source": "https://github.com/opis/closure/tree/3.6.3"
             },
             "time": "2022-01-27T09:35:39+00:00"
-        },
-        {
-            "name": "php-uniter/php-uniter-assistant",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-uniter/php-uniter-assistant.git",
-                "reference": "512104562e1d6cbbc4bdda13f04e679c13c24bef"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-uniter/php-uniter-assistant/zipball/512104562e1d6cbbc4bdda13f04e679c13c24bef",
-                "reference": "512104562e1d6cbbc4bdda13f04e679c13c24bef",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.4"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "v3.*",
-                "phpunit/phpunit": "9.*",
-                "vimeo/psalm": "4.9.2"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "PhpUniter\\PhpUniterPackage\\": "src/",
-                    "PhpUniter\\PhpUniterPackage\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "php-cs-fixer": [
-                    "php ./vendor/bin/php-cs-fixer  fix --config=.php_cs.dist ./"
-                ],
-                "psalm": [
-                    "php ./vendor/bin/psalm -c psalm.xml"
-                ],
-                "test": [
-                    "php ./vendor/bin/phpunit"
-                ]
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Eduard Fomin",
-                    "email": "eduard.fomin@uniter1.tech"
-                }
-            ],
-            "homepage": "https://github.com/php-uniter/php-uniter-assistant",
-            "keywords": [
-                "php-uniter",
-                "php-uniter-assistant"
-            ],
-            "support": {
-                "source": "https://github.com/php-uniter/php-uniter-assistant/tree/main",
-                "issues": "https://github.com/php-uniter/php-uniter-assistant/issues"
-            },
-            "time": "2021-12-19T08:19:45+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -5686,6 +5625,67 @@
                 "source": "https://github.com/phar-io/version/tree/3.1.0"
             },
             "time": "2021-02-23T14:00:09+00:00"
+        },
+        {
+            "name": "php-uniter/php-uniter-assistant",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-uniter/php-uniter-assistant.git",
+                "reference": "512104562e1d6cbbc4bdda13f04e679c13c24bef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-uniter/php-uniter-assistant/zipball/512104562e1d6cbbc4bdda13f04e679c13c24bef",
+                "reference": "512104562e1d6cbbc4bdda13f04e679c13c24bef",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "v3.*",
+                "phpunit/phpunit": "9.*",
+                "vimeo/psalm": "4.9.2"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpUniter\\PhpUniterPackage\\": "src/",
+                    "PhpUniter\\PhpUniterPackage\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "php-cs-fixer": [
+                    "php ./vendor/bin/php-cs-fixer  fix --config=.php_cs.dist ./"
+                ],
+                "psalm": [
+                    "php ./vendor/bin/psalm -c psalm.xml"
+                ],
+                "test": [
+                    "php ./vendor/bin/phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eduard Fomin",
+                    "email": "eduard.fomin@uniter1.tech"
+                }
+            ],
+            "homepage": "https://github.com/php-uniter/php-uniter-assistant",
+            "keywords": [
+                "php-uniter",
+                "php-uniter-assistant"
+            ],
+            "support": {
+                "source": "https://github.com/php-uniter/php-uniter-assistant/tree/main",
+                "issues": "https://github.com/php-uniter/php-uniter-assistant/issues"
+            },
+            "time": "2021-12-19T08:19:45+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
