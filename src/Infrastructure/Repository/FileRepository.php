@@ -2,22 +2,19 @@
 
 namespace PhpUniter\PackageLaravel\Infrastructure\Repository;
 
-use SplFileObject;
+use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 
 class FileRepository
 {
-    public function findOne(string $filePath): ?SplFileObject
+    public function findOne(string $filePath): ?LocalFile
     {
-        try {
-            if (file_exists($filePath)) {
-                return new SplFileObject($filePath, 'r');
-            }
-        } catch (\RuntimeException $exception) {
-
-        } catch (\LogicException $exception) {
-
+        if (is_readable($filePath)) {
+            return new LocalFile(
+                $filePath,
+                file_get_contents($filePath)
+            );
         }
 
-        return null;
+        throw new File
     }
 }

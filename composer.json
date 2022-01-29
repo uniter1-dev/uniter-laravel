@@ -55,7 +55,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/php-uniter/php-uniter-assistant.git"
+            "url": "git@github.com:php-uniter/php-uniter-assistant.git"
         }
     ]
 }

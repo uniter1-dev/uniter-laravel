@@ -4,7 +4,7 @@ namespace PhpUniter\PackageLaravel;
 
 use Illuminate\Support\ServiceProvider;
 use \GuzzleHttp\Client;
-use PhpUniter\PackageLaravel\Application\PhpUniter\TestGenerator;
+use PhpUniter\PackageLaravel\Application\PhpUniter\Generator;
 use PhpUniter\PackageLaravel\Controller\Console\Cli\GeneratePhpUniterTestCommand;
 
 class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
@@ -40,8 +40,8 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             return new PhpUniterPackageLaravel;
         });
 
-        $this->app->bind(TestGenerator::class, function ($app) {
-            return new TestGenerator(new Client());
+        $this->app->bind(Generator::class, function ($app) {
+            return new Generator(new Client());
         });
     }
 }

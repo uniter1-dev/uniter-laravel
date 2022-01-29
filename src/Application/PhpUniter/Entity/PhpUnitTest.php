@@ -2,24 +2,31 @@
 
 namespace PhpUniter\PackageLaravel\Application\PhpUniter\Entity;
 
+use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
+
 class PhpUnitTest
 {
-    private string $unitTestBody;
+    private LocalFile $localFile;
+    private string $unitTest;
+    private array $repositories;
 
-    /**
-     * PhpUnitTest constructor.
-     * @param string $unitTestBody
-     */
-    public function __construct(string $unitTestBody)
+    public function __construct(LocalFile $localFile, string $unitTest, array $repositories)
     {
-        $this->unitTestBody = $unitTestBody;
+        $this->localFile = $localFile;
+        $this->unitTest = $unitTest;
+        $this->repositories = $repositories;
+    }
+
+    public function getUnitTest(): string
+    {
+        return $this->unitTest;
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getUnitTestBody(): string
+    public function getRepositories(): array
     {
-        return $this->unitTestBody;
+        return $this->repositories;
     }
 }

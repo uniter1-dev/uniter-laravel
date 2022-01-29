@@ -2,14 +2,21 @@
 
 namespace PhpUniter\PackageLaravel\Application;
 
-use PhpUniter\PackageLaravel\Application\PhpUniter\TestGenerator;
-use PhpUniter\PackageLaravel\Application\Test\TestPlacer;
+use PhpUniter\PackageLaravel\Application\PhpUniter\Generator;
+use PhpUniter\PackageLaravel\Application\Test\Placer;
 use \SplFileObject;
 use \Exception;
 
+/**
+ * Class PhpUnitService
+ */
 class PhpUnitService
 {
-    public function __construct(TestGenerator $testGenerator, TestPlacer $testPlacer)
+    private Placer $testPlacer;
+
+    private Generator $testGenerator;
+
+    public function __construct(Generator $testGenerator, Placer $testPlacer)
     {
         $this->testGenerator = $testGenerator;
         $this->testPlacer = $testPlacer;
@@ -18,9 +25,9 @@ class PhpUnitService
     public function process(SplFileObject $file): bool
     {
         try {
-            $test = $this->testGenerator->generate($file);
+            $phpUnitTest = $this->testGenerator->generate($file);
 
-            $this->placer->place($test);
+            $this->testPlacer->place($phpUnitTest);
         } catch (Exception $exception) {
             return false;
         }
