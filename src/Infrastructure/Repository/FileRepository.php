@@ -3,6 +3,7 @@
 namespace PhpUniter\PackageLaravel\Infrastructure\Repository;
 
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
+use PhpUniter\PackageLaravel\Application\File\Exception\FileNotAccessed;
 
 class FileRepository
 {
@@ -15,6 +16,6 @@ class FileRepository
             );
         }
 
-        throw new File
+        throw new FileNotAccessed("File $filePath was not found");
     }
 }

@@ -28,7 +28,7 @@ class GeneratePhpUniterTestCommand extends Command
      *
      * @return mixed
      */
-    public function handle(FileRepository $fileRepository, PhpUnitService $service)
+    public function handle(FileRepository $fileRepository, PhpUnitService $phpUnitService)
     {
         $filePath = $this->argument('filePath');
 
@@ -38,6 +38,8 @@ class GeneratePhpUniterTestCommand extends Command
             return 1;
         }
 
-        $service->process($file);
+        $phpUnitService->process($file);
+        
+        return 0;
     }
 }
