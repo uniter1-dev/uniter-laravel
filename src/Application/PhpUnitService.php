@@ -2,12 +2,12 @@
 
 namespace PhpUniter\PackageLaravel\Application;
 
+use Exception;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Generator;
-use \Exception;
 
 /**
- * Class PhpUnitService
+ * Class PhpUnitService.
  */
 class PhpUnitService
 {
@@ -25,8 +25,8 @@ class PhpUnitService
     public function process(LocalFile $file): bool
     {
         try {
-            [$obfuscated, $map] = $this->obfuscatorService->obfuscate($file->getFileBody());
-            $obfuscatedPhpUnitTest = $this->testGenerator->generate($obfuscated->getBody());
+            [$obfuscated, $map] = $this->obfuscatorService->obfuscate($file);
+            $obfuscatedPhpUnitTest = $this->testGenerator->generate($obfuscated);
             $phpUnitTest = $this->obfuscatorService->deObfuscate($obfuscatedPhpUnitTest, $map);
 
             $this->testPlacer->place($phpUnitTest);

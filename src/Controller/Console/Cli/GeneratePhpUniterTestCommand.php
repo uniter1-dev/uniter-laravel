@@ -3,7 +3,6 @@
 namespace PhpUniter\PackageLaravel\Controller\Console\Cli;
 
 use Illuminate\Console\Command;
-
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepository;
 
@@ -35,11 +34,12 @@ class GeneratePhpUniterTestCommand extends Command
         $file = $fileRepository->findOne($filePath);
         if (!$file) {
             $this->error("File {$filePath} not found");
+
             return 1;
         }
 
         $phpUnitService->process($file);
-        
+
         return 0;
     }
 }

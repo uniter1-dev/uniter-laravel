@@ -10,7 +10,7 @@ class PhpUnitTest
     private string $unitTest;
     private array $repositories;
 
-    public function __construct(LocalFile $localFile, string $unitTest, array $repositories)
+    public function __construct(LocalFile $localFile, string $unitTest, array $repositories = [])
     {
         $this->localFile = $localFile;
         $this->unitTest = $unitTest;
@@ -29,4 +29,14 @@ class PhpUnitTest
     {
         return $this->repositories;
     }
+
+    /**
+     * @return LocalFile
+     */
+    public function getLocalFile(): LocalFile
+    {
+        return $this->localFile;
+    }
+
+
 }

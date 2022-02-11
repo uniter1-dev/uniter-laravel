@@ -20,13 +20,17 @@ class Generator
 
     public function generate(LocalFile $localFile): PhpUnitTest
     {
-        $obfuscatedFileBody = $this->obfuscatorService->obfuscate($localFile->getFileBody());
-        $unitTest = $this->client->post($obfuscatedFileBody);
+        /** @var LocalFile $obfuscatedFile */
+        [$obfuscatedFile, $map] = $this->obfuscatorService->obfuscate($localFile);
+        $url = config('php-uniter.baseUrl');
+        $api = config('php-uniter.apiUrl');
+        $data = json_encode(['class' => $obfuscatedFile->getFileBody()]);
+        $unitTest = $this->client->post($url.$api, ['json' => $data]);
 
         return new PhpUnitTest(
             $localFile,
             $this->obfuscatorService->obfuscate($unitTest['unitTest']),
-            $this->obfuscatorService->obfuscate($unitTest['repositories']),
+            $this->obfuscatorService->obfuscate($unitTest['repositories'] ?? ''),
         );
     }
 }

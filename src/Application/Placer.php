@@ -5,9 +5,6 @@ namespace PhpUniter\PackageLaravel\Application;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
 use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepository;
 
-/**
- *
- */
 class Placer
 {
     private FileRepository $fileRepository;
@@ -26,18 +23,17 @@ class Placer
     /*
      * @TODO merge strategy: add, replace, diff
      */
-    private function placeUnitTest(string $unitTest) {
+    private function placeUnitTest(string $unitTest)
+    {
         $existingUnitTest = $this->fileRepository->findOne($unitTest);
         //merge($existingUnitTest, $unitTest);
     }
 
-    private function placeRepositories(array $repositories){
-
-        foreach($repositories as $repository)
-        {
+    private function placeRepositories(array $repositories)
+    {
+        foreach ($repositories as $repository) {
             //$existingRepository = findExisting($repository);
             //merge($existingRepository, $repository);
         }
     }
-
 }

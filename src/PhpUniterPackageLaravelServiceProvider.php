@@ -2,8 +2,9 @@
 
 namespace PhpUniter\PackageLaravel;
 
+use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
-use \GuzzleHttp\Client;
+use PhpUniter\PackageLaravel\Application\Obfuscator;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Generator;
 use PhpUniter\PackageLaravel\Controller\Console\Cli\GeneratePhpUniterTestCommand;
 
@@ -14,15 +15,14 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/config.php' => config_path('php-uniter.php'),
             ], 'config');
 
             // Registering package commands.
-             $this->commands([
-                 GeneratePhpUniterTestCommand::class
+            $this->commands([
+                 GeneratePhpUniterTestCommand::class,
              ]);
         }
     }
@@ -37,11 +37,11 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
 
         // Register the main class to use with the facade
         $this->app->singleton('php-uniter', function () {
-            return new PhpUniterPackageLaravel;
+            return new PhpUniterPackageLaravel();
         });
 
         $this->app->bind(Generator::class, function ($app) {
-            return new Generator(new Client());
+            return new Generator(new Client(), new Obfuscator());
         });
     }
 }
