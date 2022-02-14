@@ -1,12 +1,38 @@
 <?php
 
+namespace PhpUniter\PackageLaravel\Infrastructure\Integrations;
+
+use GuzzleHttp\Client;
+use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
+use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
+use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
+
 class PhpUniterIntegration
 {
-    public function __construct(Request $request)
+    private Client $client;
+    private GenerateRequest $generateRequest;
+
+    public function __construct(Client $client, GenerateRequest $generateRequest)
     {
+        $this->client = $client;
+        $this->generateRequest = $generateRequest;
     }
 
-    public function generateTest(string $fullyQualifiedClassName): string
+    public function generatePhpUnitTest(LocalFile $localFile): PhpUnitTest
     {
+        $unitTest = $this->client->send(
+            $this->generateRequest,
+            [
+                'json' => [
+                    'class' => $localFile->getFileBody()
+                ]
+            ]
+        );
+
+        return new PhpUnitTest(
+            $localFile,
+            $unitTest['unitTest'],
+            $unitTest['repositories'],
+        );
     }
 }
