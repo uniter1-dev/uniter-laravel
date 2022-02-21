@@ -7,6 +7,8 @@
 node_modules/
 dist/
 vendor/
+.php-cs-fixer.cache
+.phpunit.result.cache
 
 # Composer executable
 composer.phar

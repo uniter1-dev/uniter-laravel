@@ -24,8 +24,8 @@ class PhpUniterIntegration
             $this->generateRequest,
             [
                 'json' => [
-                    'class' => $localFile->getFileBody()
-                ]
+                    'class' => $localFile->getFileBody(),
+                ],
             ]
         );
 

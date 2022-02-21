@@ -54,10 +54,10 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
                 '/api/v1/generator/generate',
                 [
                     'auth' => [
-                        'Authorization' => 'Bearer '.config('php-uniter.accessToken')
+                        'Authorization' => 'Bearer '.config('php-uniter.accessToken'),
                     ],
                     'host' => config('php-uniter.baseUrl'),
-                    'timeout'  => 2
+                    'timeout' => 2,
                 ]
             );
         });

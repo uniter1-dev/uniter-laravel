@@ -6,5 +6,4 @@ use GuzzleHttp\Psr7\Request;
 
 class GenerateRequest extends Request
 {
-
 }
