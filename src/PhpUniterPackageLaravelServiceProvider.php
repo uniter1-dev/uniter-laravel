@@ -3,10 +3,11 @@
 namespace PhpUniter\PackageLaravel;
 
 use GuzzleHttp\Client;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use PhpUniter\PackageLaravel\Application\Obfuscator;
-use PhpUniter\PackageLaravel\Application\PhpUniter\Generator;
 use PhpUniter\PackageLaravel\Controller\Console\Cli\GeneratePhpUniterTestCommand;
+use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
+use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
 
 class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
 {
@@ -40,8 +41,25 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             return new PhpUniterPackageLaravel();
         });
 
-        $this->app->bind(Generator::class, function ($app) {
-            return new Generator(new Client(), new Obfuscator());
+        $this->app->bind(PhpUniterIntegration::class, function (Application $app) {
+            return new PhpUniterIntegration(
+                new Client(),
+                $app->make(GenerateRequest::class)
+            );
+        });
+
+        $this->app->bind(GenerateRequest::class, function (Application $app) {
+            return new GenerateRequest(
+            'POST',
+                '/api/v1/generator/generate',
+                [
+                    'auth' => [
+                        'Authorization' => 'Bearer '.config('php-uniter.accessToken'),
+                    ],
+                    'host' => config('php-uniter.baseUrl'),
+                    'timeout' => 2,
+                ]
+            );
         });
     }
 }

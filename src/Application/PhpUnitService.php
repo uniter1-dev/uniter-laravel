@@ -4,31 +4,23 @@ namespace PhpUniter\PackageLaravel\Application;
 
 use Exception;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
-use PhpUniter\PackageLaravel\Application\PhpUniter\Generator;
+use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
 
-/**
- * Class PhpUnitService.
- */
 class PhpUnitService
 {
     private Placer $testPlacer;
-    private Generator $testGenerator;
-    private Obfuscator $obfuscatorService;
+    private PhpUniterIntegration $phpUniterIntegration;
 
-    public function __construct(Generator $testGenerator, Obfuscator $obfuscatorService, Placer $testPlacer)
+    public function __construct(PhpUniterIntegration $phpUniterIntegration, Placer $testPlacer)
     {
-        $this->testGenerator = $testGenerator;
-        $this->obfuscatorService = $obfuscatorService;
+        $this->phpUniterIntegration = $phpUniterIntegration;
         $this->testPlacer = $testPlacer;
     }
 
     public function process(LocalFile $file): bool
     {
         try {
-            [$obfuscated, $map] = $this->obfuscatorService->obfuscate($file);
-            $obfuscatedPhpUnitTest = $this->testGenerator->generate($obfuscated);
-            $phpUnitTest = $this->obfuscatorService->deObfuscate($obfuscatedPhpUnitTest, $map);
-
+            $phpUnitTest = $this->phpUniterIntegration->generatePhpUnitTest($file);
             $this->testPlacer->place($phpUnitTest);
         } catch (Exception $exception) {
             return false;
