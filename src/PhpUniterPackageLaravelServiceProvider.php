@@ -51,12 +51,12 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
         $this->app->bind(GenerateRequest::class, function (Application $app) {
             return new GenerateRequest(
             'POST',
-                '/api/v1/generator/generate',
+                config('php-uniter.baseUrl').'/api/v1/generator/generate',
                 [
                     'auth' => [
                         'Authorization' => 'Bearer '.config('php-uniter.accessToken'),
                     ],
-                    'host' => config('php-uniter.baseUrl'),
+                    // 'host'    => config('php-uniter.baseUrl'),
                     'timeout' => 2,
                 ]
             );
