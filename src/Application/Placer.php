@@ -2,6 +2,7 @@
 
 namespace PhpUniter\PackageLaravel\Application;
 
+use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
 use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepository;
 
@@ -14,19 +15,18 @@ class Placer
         $this->fileRepository = $fileRepository;
     }
 
-    public function place(PhpUnitTest $phpUnitTest)
+    public function place(PhpUnitTest $phpUnitTest, string $srcPath)
     {
-        $this->placeUnitTest($phpUnitTest->getUnitTest());
-        $this->placeRepositories($phpUnitTest->getRepositories());
+        return $this->placeUnitTest($phpUnitTest, $srcPath);
+        //$this->placeRepositories($phpUnitTest->getRepositories());
     }
 
     /*
      * @TODO merge strategy: add, replace, diff
      */
-    private function placeUnitTest(string $unitTest)
+    private function placeUnitTest(PhpUnitTest $unitTest, string $srcPath)
     {
-        $existingUnitTest = $this->fileRepository->findOne($unitTest);
-        //merge($existingUnitTest, $unitTest);
+        return $this->fileRepository->saveOne($unitTest, $srcPath);
     }
 
     private function placeRepositories(array $repositories)

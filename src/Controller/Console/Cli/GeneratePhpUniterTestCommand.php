@@ -38,7 +38,7 @@ class GeneratePhpUniterTestCommand extends Command
             return 1;
         }
 
-        $phpUnitService->process($file);
+        $phpUnitService->fakeProcess($file, $filePath);
 
         return 0;
     }

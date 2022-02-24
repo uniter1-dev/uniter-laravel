@@ -29,4 +29,11 @@ class PhpUnitTest
     {
         return $this->repositories;
     }
+
+    public function getLocalFile(): LocalFile
+    {
+        return $this->localFile;
+    }
+
+
 }
