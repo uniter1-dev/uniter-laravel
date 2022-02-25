@@ -13,7 +13,7 @@ class GeneratePhpUniterTestCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'php-uniter:generate {filePath}';
+    protected $signature = 'php-uniter:generate {filePath} {--base_test_class=} {--namespace=}';
 
     /**
      * The console command description.
@@ -30,6 +30,7 @@ class GeneratePhpUniterTestCommand extends Command
     public function handle(FileRepository $fileRepository, PhpUnitService $phpUnitService)
     {
         $filePath = $this->argument('filePath');
+        $options = $this->options();
 
         $file = $fileRepository->findOne($filePath);
         if (!$file) {
@@ -38,7 +39,7 @@ class GeneratePhpUniterTestCommand extends Command
             return 1;
         }
 
-        $phpUnitService->fakeProcess($file, $filePath);
+        $phpUnitService->fakeProcess($file, $filePath, $options);
 
         return 0;
     }

@@ -31,10 +31,10 @@ class PhpUnitService
         return true;
     }
 
-    public function fakeProcess(LocalFile $file, string $srcPath): bool
+    public function fakeProcess(LocalFile $file, string $srcPath, array $options): bool
     {
         try {
-            $phpUnitTestText = $this->fakeGenerate($file->getFileBody());
+            $phpUnitTestText = $this->fakeGenerate($file->getFileBody(), $options);
             if (!$phpUnitTestText) {
                 return false;
             }
@@ -51,9 +51,10 @@ class PhpUnitService
         return true;
     }
 
-    public function fakeGenerate(string $fileText, string $srcPath = ''): ?string
+    public function fakeGenerate(string $fileText, array $options): ?string
     {
         $generator = new TopAstLayer();
+        $generator->setOptions($options);
 
         return $generator->fetch($fileText);
     }
