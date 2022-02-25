@@ -2,6 +2,7 @@
 
 namespace PhpUniter\PackageLaravel\Application;
 
+use App\Application\TopAstLayer;
 use Exception;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
@@ -18,11 +19,11 @@ class PhpUnitService
         $this->testPlacer = $testPlacer;
     }
 
-    public function process(LocalFile $file): bool
+    public function process(LocalFile $file, string $srcPath): bool
     {
         try {
             $phpUnitTest = $this->phpUniterIntegration->generatePhpUnitTest($file);
-            $this->testPlacer->place($phpUnitTest);
+            $this->testPlacer->place($phpUnitTest, $srcPath);
         } catch (Exception $exception) {
             return false;
         }
@@ -33,10 +34,13 @@ class PhpUnitService
     public function fakeProcess(LocalFile $file, string $srcPath): bool
     {
         try {
-            //$phpUnitTest = $this->phpUniterIntegration->generatePhpUnitTest($file);
+            $phpUnitTestText = $this->fakeGenerate($file->getFileBody());
+            if (!$phpUnitTestText) {
+                return false;
+            }
             $phpUnitTest = new PhpUnitTest(
                 $file,
-                $file->getFileBody(),
+                $phpUnitTestText,
                 [],
             );
             $this->testPlacer->place($phpUnitTest, $srcPath);
@@ -45,5 +49,12 @@ class PhpUnitService
         }
 
         return true;
+    }
+
+    public function fakeGenerate(string $fileText, string $srcPath = ''): ?string
+    {
+        $generator = new TopAstLayer();
+
+        return $generator->fetch($fileText);
     }
 }
