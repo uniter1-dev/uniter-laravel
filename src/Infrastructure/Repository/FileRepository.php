@@ -20,11 +20,11 @@ class FileRepository
         throw new FileNotAccessed("File $filePath was not found");
     }
 
-    public function saveOne(PhpUnitTest $unitTest, string $srcPath): bool
+    public function saveOne(string $unitTestText, string $filePath): bool
     {
-        $filePath = config('php-uniter.unitTestsDirectory').'/'.$srcPath;
+
         $testDir = dirname($filePath);
-        if ($this->touchDir($testDir) && file_put_contents($filePath, $unitTest->getUnitTest())) {
+        if ($this->touchDir($testDir) && file_put_contents($filePath, $unitTestText)) {
             return true;
         }
 

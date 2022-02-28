@@ -31,7 +31,7 @@ class PhpUnitService
         return true;
     }
 
-    public function fakeProcess(LocalFile $file, string $srcPath, array $options): bool
+    public function fakeProcess(LocalFile $file, array $options): bool
     {
         try {
             $phpUnitTestText = $this->fakeGenerate($file->getFileBody(), $options);
@@ -43,7 +43,7 @@ class PhpUnitService
                 $phpUnitTestText,
                 [],
             );
-            $this->testPlacer->place($phpUnitTest, $srcPath);
+            $this->testPlacer->place($phpUnitTest);
         } catch (Exception $exception) {
             return false;
         }

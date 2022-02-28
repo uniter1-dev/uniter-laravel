@@ -15,25 +15,17 @@ class Placer
         $this->fileRepository = $fileRepository;
     }
 
-    public function place(PhpUnitTest $phpUnitTest, string $srcPath)
+    public function place(PhpUnitTest $phpUnitTest)
     {
-        return $this->placeUnitTest($phpUnitTest, $srcPath);
-        //$this->placeRepositories($phpUnitTest->getRepositories());
+        return $this->placeUnitTest($phpUnitTest->getUnitTest(), $phpUnitTest->getLocalFile()->getFilePath());
     }
 
     /*
      * @TODO merge strategy: add, replace, diff
      */
-    private function placeUnitTest(PhpUnitTest $unitTest, string $srcPath)
+    private function placeUnitTest(string $unitTestText, string $filePath)
     {
-        return $this->fileRepository->saveOne($unitTest, $srcPath);
+        return $this->fileRepository->saveOne($unitTestText, $filePath);
     }
 
-    private function placeRepositories(array $repositories)
-    {
-        foreach ($repositories as $repository) {
-            //$existingRepository = findExisting($repository);
-            //merge($existingRepository, $repository);
-        }
-    }
 }
