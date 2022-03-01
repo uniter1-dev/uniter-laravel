@@ -18,13 +18,14 @@ class PhpUniterIntegration
         $this->generateRequest = $generateRequest;
     }
 
-    public function generatePhpUnitTest(LocalFile $localFile): PhpUnitTest
+    public function generatePhpUnitTest(LocalFile $localFile, array $options): PhpUnitTest
     {
         $unitTest = $this->client->send(
             $this->generateRequest,
             [
                 'json' => [
                     'class' => $localFile->getFileBody(),
+                    'options' => $options,
                 ],
             ]
         );

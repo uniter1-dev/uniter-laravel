@@ -39,7 +39,7 @@ class GeneratePhpUniterTestCommand extends Command
             return 1;
         }
 
-        $phpUnitService->fakeProcess($file, $filePath, $options);
+        $phpUnitService->process($file, $options);
 
         return 0;
     }
