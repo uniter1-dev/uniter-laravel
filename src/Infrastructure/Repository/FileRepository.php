@@ -31,7 +31,7 @@ class FileRepository
         throw new FileNotAccessed("File $filePath was not found");
     }
 
-    public function touchDir(string $dirPath)
+    private function touchDir(string $dirPath)
     {
         if (is_dir($dirPath)) {
             return true;

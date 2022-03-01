@@ -56,7 +56,6 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
                     'auth' => [
                         'Authorization' => 'Bearer '.config('php-uniter.accessToken'),
                     ],
-                    // 'host'    => config('php-uniter.baseUrl'),
                     'timeout' => 2,
                 ]
             );
