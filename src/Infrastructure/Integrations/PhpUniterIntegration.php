@@ -30,10 +30,12 @@ class PhpUniterIntegration
             ]
         );
 
+        $test = $unitTest->getBody()->getContents();
+
         return new PhpUnitTest(
             $localFile,
-            $unitTest['unitTest'],
-            $unitTest['repositories'],
+            $test,
+            [],
         );
     }
 }
