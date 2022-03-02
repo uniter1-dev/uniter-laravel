@@ -34,11 +34,15 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'php-uniter');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'php-uniter');
 
         // Register the main class to use with the facade
         $this->app->singleton('php-uniter', function () {
             return new PhpUniterPackageLaravel();
+        });
+
+        $this->app->bind(GenerateClient::class, function (Application $app) {
+            return new GenerateClient();
         });
 
         $this->app->bind(PhpUniterIntegration::class, function (Application $app) {
@@ -59,10 +63,6 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
                     'timeout' => 2,
                 ]
             );
-        });
-
-        $this->app->bind(GenerateClient::class, function (Application $app) {
-            return new GenerateClient();
         });
     }
 }
