@@ -2,7 +2,6 @@
 
 namespace PhpUniter\PackageLaravel;
 
-use GuzzleHttp\Client;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use PhpUniter\PackageLaravel\Controller\Console\Cli\GeneratePhpUniterTestCommand;
