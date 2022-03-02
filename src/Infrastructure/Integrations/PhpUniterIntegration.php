@@ -2,17 +2,17 @@
 
 namespace PhpUniter\PackageLaravel\Infrastructure\Integrations;
 
-use GuzzleHttp\Client;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
+use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
 
 class PhpUniterIntegration
 {
-    private Client $client;
+    private GenerateClient $client;
     private GenerateRequest $generateRequest;
 
-    public function __construct(Client $client, GenerateRequest $generateRequest)
+    public function __construct(GenerateClient $client, GenerateRequest $generateRequest)
     {
         $this->client = $client;
         $this->generateRequest = $generateRequest;
