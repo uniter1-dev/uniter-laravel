@@ -34,7 +34,7 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'php-uniter');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'php-uniter');
 
         // Register the main class to use with the facade
         $this->app->singleton('php-uniter', function () {
@@ -55,10 +55,10 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
         $this->app->bind(GenerateRequest::class, function (Application $app) {
             return new GenerateRequest(
                 'POST',
-                config('php-uniter.baseUrl') . '/api/v1/generator/generate',
+                config('php-uniter.baseUrl').'/api/v1/generator/generate',
                 [
                     'auth' => [
-                        'Authorization' => 'Bearer ' . config('php-uniter.accessToken'),
+                        'Authorization' => 'Bearer '.config('php-uniter.accessToken'),
                     ],
                     'timeout' => 2,
                 ]

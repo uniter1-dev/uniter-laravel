@@ -18,9 +18,9 @@ class ObfuscatedClass implements Obfuscated
     private array $map = [
         self::CLASS_NAME => '',
         self::PROPERTIES => [],
-        self::METHODS => [],
-        self::ARGUMENTS => [],
-        self::CONSTANTS => [],
+        self::METHODS    => [],
+        self::ARGUMENTS  => [],
+        self::CONSTANTS  => [],
         self::NAMESPACES => [],
     ];
 

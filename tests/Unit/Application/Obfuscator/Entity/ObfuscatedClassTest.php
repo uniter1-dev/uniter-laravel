@@ -37,8 +37,8 @@ class ObfuscatedClassTest extends TestCase
     {
         return [
             [
-                file_get_contents(__DIR__ . '/Fixtures/Obfuscated.php.input'),
-                file_get_contents(__DIR__ . '/Fixtures/Obfuscated.php.obfuscated'),
+                file_get_contents(__DIR__.'/Fixtures/Obfuscated.php.input'),
+                file_get_contents(__DIR__.'/Fixtures/Obfuscated.php.obfuscated'),
             ],
         ];
     }
