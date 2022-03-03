@@ -15,7 +15,7 @@ class Placer
         $this->fileRepository = $fileRepository;
     }
 
-    public function place(PhpUnitTest $phpUnitTest)
+    public function place(PhpUnitTest $phpUnitTest): bool
     {
         return $this->placeUnitTest($phpUnitTest->getUnitTest(), $phpUnitTest->getLocalFile()->getFilePath());
     }
@@ -23,7 +23,7 @@ class Placer
     /*
      * @TODO merge strategy: add, replace, diff
      */
-    private function placeUnitTest(string $unitTestText, string $filePath)
+    private function placeUnitTest(string $unitTestText, string $filePath): bool
     {
         return $this->fileRepository->saveOne($unitTestText, $filePath);
     }
