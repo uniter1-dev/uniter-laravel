@@ -4,6 +4,8 @@ namespace PhpUniter\PackageLaravel\Application;
 
 use Exception;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
+use PhpUniter\PackageLaravel\Application\File\Exception\DirectoryPathWrong;
+use PhpUniter\PackageLaravel\Application\File\Exception\FileNotAccessed;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
 
 class PhpUnitService
@@ -17,14 +19,15 @@ class PhpUnitService
         $this->testPlacer = $testPlacer;
     }
 
+    /**
+     * @throws DirectoryPathWrong
+     * @throws FileNotAccessed
+     */
+
     public function process(LocalFile $file, array $options): bool
     {
-        try {
-            $phpUnitTest = $this->phpUniterIntegration->generatePhpUnitTest($file, $options);
-            $this->testPlacer->place($phpUnitTest);
-        } catch (Exception $exception) {
-            return false;
-        }
+        $phpUnitTest = $this->phpUniterIntegration->generatePhpUnitTest($file, $options);
+        $this->testPlacer->place($phpUnitTest);
 
         return true;
     }

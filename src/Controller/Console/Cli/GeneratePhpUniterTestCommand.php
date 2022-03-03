@@ -2,6 +2,7 @@
 
 namespace PhpUniter\PackageLaravel\Controller\Console\Cli;
 
+use Exception;
 use Illuminate\Console\Command;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepository;
@@ -29,17 +30,22 @@ class GeneratePhpUniterTestCommand extends Command
      */
     public function handle(FileRepository $fileRepository, PhpUnitService $phpUnitService)
     {
-        $filePath = $this->argument('filePath');
-        $options = $this->options();
+        try {
+            $filePath = $this->argument('filePath');
 
-        $file = $fileRepository->findOne($filePath);
-        if (!$file) {
-            $this->error("File {$filePath} not found");
+            if (!is_string($filePath)) {
+                throw new Exception('Empty filePath command parameter');
+            }
+
+            $options = $this->options();
+            $file = $fileRepository->findOne($filePath);
+
+            $phpUnitService->process($file, $options);
+        } catch (Exception $e) {
+            $this->error($e->getMessage());
 
             return 1;
         }
-
-        $phpUnitService->process($file, $options);
 
         return 0;
     }
