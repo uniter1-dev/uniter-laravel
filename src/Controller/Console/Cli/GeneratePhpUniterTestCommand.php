@@ -40,7 +40,9 @@ class GeneratePhpUniterTestCommand extends Command
             $options = $this->options();
             $file = $fileRepository->findOne($filePath);
 
-            $phpUnitService->process($file, $options);
+            $phpUnitTest = $phpUnitService->process($file, $options);
+            $log = $phpUnitTest->getRepositories()['log'];
+            $this->warn($log);
         } catch (Exception $e) {
             $this->error($e->getMessage());
 

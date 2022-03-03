@@ -30,12 +30,14 @@ class PhpUniterIntegration
             ]
         );
 
-        $generatedTestText = $unitTest->getBody()->getContents();
+        $generatedTestJson = $unitTest->getBody()->getContents();
+        $generatedTest = json_decode($generatedTestJson, true);
+        $generatedTestText = $generatedTest['test'];
 
         return new PhpUnitTest(
             $localFile,
             $generatedTestText,
-            [],
+            $generatedTest,
         );
     }
 }
