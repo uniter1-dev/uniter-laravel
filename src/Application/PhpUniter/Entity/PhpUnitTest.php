@@ -34,6 +34,4 @@ class PhpUnitTest
     {
         return $this->localFile;
     }
-
-
 }

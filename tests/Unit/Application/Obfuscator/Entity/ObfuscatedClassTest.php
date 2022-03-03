@@ -11,8 +11,6 @@ class ObfuscatedClassTest extends TestCase
 {
     /**
      * @dataProvider getObfuscatedFileBody
-     *
-     *
      */
     public function testGetObfuscatedFileBody($input, $expected)
     {
@@ -21,7 +19,7 @@ class ObfuscatedClassTest extends TestCase
             ->andReturn($input);
 
         $keys = ['className'];
-        $keyGenerator = function() use ($keys) {
+        $keyGenerator = function () use ($keys) {
             static $i = 0;
 
             return $keys[$i++];
@@ -41,7 +39,7 @@ class ObfuscatedClassTest extends TestCase
             [
                 file_get_contents(__DIR__ . '/Fixtures/Obfuscated.php.input'),
                 file_get_contents(__DIR__ . '/Fixtures/Obfuscated.php.obfuscated'),
-            ]
+            ],
         ];
     }
 }

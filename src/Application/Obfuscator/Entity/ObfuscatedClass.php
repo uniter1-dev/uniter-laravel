@@ -49,9 +49,7 @@ class ObfuscatedClass implements Obfuscated
         );
 
         if (count($replacements) > $count) {
-            throw new ObfuscationFailed(
-                "Obfuscation failed on {$this->localFile->getFilePath()}, count of replacements is not enough"
-            );
+            throw new ObfuscationFailed("Obfuscation failed on {$this->localFile->getFilePath()}, count of replacements is not enough");
         }
 
         return $obfuscated;

@@ -20,7 +20,6 @@ class Placer
      * @throws DirectoryPathWrong
      * @throws FileNotAccessed
      */
-
     public function place(PhpUnitTest $phpUnitTest): bool
     {
         return $this->placeUnitTest($phpUnitTest->getUnitTest(), $phpUnitTest->getLocalFile()->getFilePath());
@@ -30,10 +29,8 @@ class Placer
      * @throws DirectoryPathWrong
      * @throws FileNotAccessed
      */
-
     private function placeUnitTest(string $unitTestText, string $filePath): bool
     {
         return $this->fileRepository->saveOne($unitTestText, $filePath);
     }
-
 }
