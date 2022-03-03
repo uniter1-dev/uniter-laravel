@@ -30,11 +30,11 @@ class PhpUniterIntegration
             ]
         );
 
-        $test = $unitTest->getBody()->getContents();
+        $generatedTestText = $unitTest->getBody()->getContents();
 
         return new PhpUnitTest(
             $localFile,
-            $test,
+            $generatedTestText,
             [],
         );
     }
