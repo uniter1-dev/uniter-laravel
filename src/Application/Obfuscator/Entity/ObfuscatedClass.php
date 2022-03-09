@@ -35,14 +35,15 @@ class ObfuscatedClass implements Obfuscated
 
     public function getObfuscatedFileBody(): string
     {
-        $obfuscated = preg_replace_callback(
+        $obfuscated = preg_replace_callback_array(
             $replacements = [
-                '/(?<=class\s)(\w+)/',
-                '/(?<=function\s)(\w+)/',
+                '/(?<=class\s)(\w+)/' => function ($matches) {
+                    return $this->storeKeyAs(self::CLASS_NAME, $matches, $this->getUniqueKey());
+                },
+                '/(?<=function\s)(\w+)/' => function ($matches) {
+                    return $this->storeKeysAs(self::METHODS, $matches, $this->getUniqueKey());
+                },
             ],
-            function ($matches) {
-                return $this->storeKeyAs(self::CLASS_NAME, $this->getUniqueKey());
-            },
             $this->localFile->getFileBody(),
             -1,
             $count
@@ -64,9 +65,16 @@ class ObfuscatedClass implements Obfuscated
         return ($this->keyGenerator)();
     }
 
-    private function storeKeyAs(string $type, string $key): string
+    private function storeKeyAs(string $type, array $matches, string $key): string
     {
-        $this->map[$type] = $key;
+        $this->map[$type] = [$key, current($matches)];
+
+        return $key;
+    }
+
+    private function storeKeysAs(string $type, array $matches, string $key): string
+    {
+        $this->map[$type][] = [$key, current($matches)];
 
         return $key;
     }
