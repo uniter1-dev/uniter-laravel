@@ -53,11 +53,24 @@ class ObfuscatedClass implements Obfuscated
             throw new ObfuscationFailed("Obfuscation failed on {$this->localFile->getFilePath()}, count of replacements is not enough");
         }
 
+        $methods = $this->map['methods'];
+        foreach ($methods as $pair) {
+            $obfuscated = self::replaceInText('->', $pair, $obfuscated);
+            $obfuscated = self::replaceInText('::', $pair, $obfuscated);
+        }
+
         return $obfuscated;
     }
 
     public function deObfuscate(string $fileBody): string
     {
+    }
+
+    private static function replaceInText($prefix, $pair, $subject)
+    {
+        $methodInText = $prefix . $pair[1] . '(';
+
+        return str_replace($methodInText, $prefix . $pair[0] . '(', $subject);
     }
 
     private function getUniqueKey(): string
