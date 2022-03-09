@@ -2,6 +2,7 @@
 
 namespace PhpUniter\PackageLaravel\Application\Obfuscator\Entity;
 
+use Closure;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscationFailed;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscated;
@@ -25,9 +26,9 @@ class ObfuscatedClass implements Obfuscated
     ];
 
     private LocalFile $localFile;
-    private \Closure $keyGenerator;
+    private Closure $keyGenerator;
 
-    public function __construct(LocalFile $localFile, \Closure $uniqKeyGenerator)
+    public function __construct(LocalFile $localFile, Closure $uniqKeyGenerator)
     {
         $this->localFile = $localFile;
         $this->keyGenerator = $uniqKeyGenerator;
@@ -64,8 +65,8 @@ class ObfuscatedClass implements Obfuscated
 
     public function deObfuscate(string $fileBody): string
     {
-        $deObfuscated = str_replace($this->map["className"][0], $this->map["className"][1], $fileBody);
-        foreach ($this->map["methods"] as $methodPair) {
+        $deObfuscated = str_replace($this->map['className'][0], $this->map['className'][1], $fileBody);
+        foreach ($this->map['methods'] as $methodPair) {
             $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
         }
 
@@ -74,11 +75,10 @@ class ObfuscatedClass implements Obfuscated
 
     private static function replaceInText($prefix, $pair, $subject)
     {
-        $methodInText = $prefix . $pair[1] . '(';
+        $methodInText = $prefix.$pair[1].'(';
 
-        return str_replace($methodInText, $prefix . $pair[0] . '(', $subject);
+        return str_replace($methodInText, $prefix.$pair[0].'(', $subject);
     }
-
 
     private function getUniqueKey(): string
     {
