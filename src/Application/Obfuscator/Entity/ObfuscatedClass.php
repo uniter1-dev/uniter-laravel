@@ -64,6 +64,12 @@ class ObfuscatedClass implements Obfuscated
 
     public function deObfuscate(string $fileBody): string
     {
+        $deObfuscated = str_replace($this->map["className"][0], $this->map["className"][1], $fileBody);
+        foreach ($this->map["methods"] as $methodPair) {
+            $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
+        }
+
+        return $deObfuscated;
     }
 
     private static function replaceInText($prefix, $pair, $subject)
@@ -72,6 +78,7 @@ class ObfuscatedClass implements Obfuscated
 
         return str_replace($methodInText, $prefix . $pair[0] . '(', $subject);
     }
+
 
     private function getUniqueKey(): string
     {
