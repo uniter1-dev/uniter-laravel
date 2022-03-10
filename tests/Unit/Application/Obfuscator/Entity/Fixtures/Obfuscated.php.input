@@ -21,7 +21,7 @@
             switch ($v) {
                 case 0:
                     return 1;
-                case 1:
+                case self::FIRST:
                     echo '1';
                     break;
                 case 2:

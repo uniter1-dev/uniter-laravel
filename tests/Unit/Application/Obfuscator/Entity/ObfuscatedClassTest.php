@@ -27,7 +27,7 @@ class ObfuscatedClassTest extends TestCase
             $keyGenerator
         );
         $obfuscated = $obfuscatedClassObject->getObfuscatedFileBody();
-        $this->assertEquals(trim($expected), $obfuscated);
+        $this->assertEquals(trim($expected), trim($obfuscated));
 
         $deObfuscated = $obfuscatedClassObject->deObfuscate($obfuscated);
         $this->assertEquals($input, $deObfuscated);

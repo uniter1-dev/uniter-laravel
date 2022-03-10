@@ -7,9 +7,9 @@
         var $v = 0; // comment
         public $path = "root"; // comment
 
-        const FIRST = 'first';
-        const SECOND = 0;
-        const Z = -1;
+        const o_name6 = 'first';
+        const o_name7 = 0;
+        const o_name8 = -1;
 
         function o_name1($v,
                      $w = "a")
@@ -21,7 +21,7 @@
             switch ($v) {
                 case 0:
                     return 1;
-                case 1:
+                case self::o_name6:
                     echo '1';
                     break;
                 case 2:

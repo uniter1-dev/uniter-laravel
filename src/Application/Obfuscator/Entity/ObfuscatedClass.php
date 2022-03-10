@@ -15,6 +15,7 @@ class ObfuscatedClass implements Obfuscated
     private const ARGUMENTS = 'arguments';
     private const CONSTANTS = 'constants';
     private const NAMESPACES = 'namespaces';
+    private const VARIABLES = 'variables';
 
     private array $map = [
         self::CLASS_NAME => '',
@@ -23,6 +24,7 @@ class ObfuscatedClass implements Obfuscated
         self::ARGUMENTS  => [],
         self::CONSTANTS  => [],
         self::NAMESPACES => [],
+        self::VARIABLES  => [],
     ];
 
     private LocalFile $localFile;
@@ -44,6 +46,9 @@ class ObfuscatedClass implements Obfuscated
                 '/(?<=function\s)(\w+)/' => function ($matches) {
                     return $this->storeKeysAs(self::METHODS, $matches, $this->getUniqueKey());
                 },
+                '/(?<=const\s)(\w+)/' => function ($matches) {
+                    return $this->storeKeysAs(self::CONSTANTS, $matches, $this->getUniqueKey());
+                },
             ],
             $this->localFile->getFileBody(),
             -1,
@@ -54,9 +59,12 @@ class ObfuscatedClass implements Obfuscated
             throw new ObfuscationFailed("Obfuscation failed on {$this->localFile->getFilePath()}, count of replacements is not enough");
         }
 
-        $methods = $this->map['methods'];
-        foreach ($methods as $pair) {
-            $obfuscated = self::replaceInText('->', $pair, $obfuscated);
+        foreach ($this->map[self::METHODS] as $pair) {
+            $obfuscated = self::replaceInText('->', $pair, $obfuscated, '(');
+            $obfuscated = self::replaceInText('::', $pair, $obfuscated, '(');
+        }
+
+        foreach ($this->map[self::CONSTANTS] as $pair) {
             $obfuscated = self::replaceInText('::', $pair, $obfuscated);
         }
 
@@ -66,18 +74,21 @@ class ObfuscatedClass implements Obfuscated
     public function deObfuscate(string $fileBody): string
     {
         $deObfuscated = str_replace($this->map['className'][0], $this->map['className'][1], $fileBody);
-        foreach ($this->map['methods'] as $methodPair) {
+        foreach ($this->map[self::METHODS] as $methodPair) {
+            $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
+        }
+        foreach ($this->map[self::CONSTANTS] as $methodPair) {
             $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
         }
 
         return $deObfuscated;
     }
 
-    private static function replaceInText($prefix, $pair, $subject)
+    private static function replaceInText($prefix, $pair, $subject, $suffix = '')
     {
-        $methodInText = $prefix.$pair[1].'(';
+        $methodInText = $prefix.$pair[1].$suffix;
 
-        return str_replace($methodInText, $prefix.$pair[0].'(', $subject);
+        return str_replace($methodInText, $prefix.$pair[0].$suffix, $subject);
     }
 
     private function getUniqueKey(): string
