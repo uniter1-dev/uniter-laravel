@@ -2,7 +2,6 @@
 
 namespace PhpUniter\PackageLaravel\Tests\Unit\Application\Obfuscator\Entity;
 
-use Mockery;
 use PHPUnit\Framework\TestCase;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Entity\ObfuscatedClass;
@@ -12,25 +11,26 @@ class ObfuscatedClassTest extends TestCase
     /**
      * @dataProvider getObfuscatedFileBody
      */
-    public function testGetObfuscatedFileBody($input, $expected)
+    public function testGetObfuscated($input, $expected)
     {
-        $localFile = Mockery::mock(LocalFile::class);
-        $localFile->shouldReceive('getFileBody')
-            ->andReturn($input);
+        $localFile = new LocalFile('', $input);
 
-        $keys = ['className'];
+        $keys = 'o_name';
         $keyGenerator = function () use ($keys) {
             static $i = 0;
 
-            return $keys[$i++];
+            return $keys.($i++);
         };
 
         $obfuscatedClassObject = new ObfuscatedClass(
             $localFile,
             $keyGenerator
         );
+        $obfuscated = $obfuscatedClassObject->getObfuscatedFileBody();
+        $this->assertEquals(trim($expected), $obfuscated);
 
-        $this->assertEquals($expected, $obfuscatedClassObject->getObfuscatedFileBody());
+        $deObfuscated = $obfuscatedClassObject->deObfuscate($obfuscated);
+        $this->assertEquals($input, $deObfuscated);
     }
 
     public function getObfuscatedFileBody()
@@ -38,7 +38,7 @@ class ObfuscatedClassTest extends TestCase
         return [
             [
                 file_get_contents(__DIR__.'/Fixtures/Obfuscated.php.input'),
-                file_get_contents(__DIR__.'/Fixtures/Obfuscated.php.obfuscated'),
+                file_get_contents(__DIR__.'/Fixtures/Obfuscated.php.expected'),
             ],
         ];
     }
