@@ -12,19 +12,15 @@ class ObfuscatedClass implements Obfuscated
     private const CLASS_NAME = 'className';
     private const PROPERTIES = 'properties';
     private const METHODS = 'methods';
-    private const ARGUMENTS = 'arguments';
     private const CONSTANTS = 'constants';
     private const NAMESPACES = 'namespaces';
-    private const VARIABLES = 'variables';
 
     private array $map = [
         self::CLASS_NAME => '',
         self::PROPERTIES => [],
         self::METHODS    => [],
-        self::ARGUMENTS  => [],
         self::CONSTANTS  => [],
         self::NAMESPACES => [],
-        self::VARIABLES  => [],
     ];
 
     private LocalFile $localFile;
