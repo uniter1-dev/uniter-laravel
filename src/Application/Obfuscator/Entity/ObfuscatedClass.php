@@ -45,6 +45,9 @@ class ObfuscatedClass implements Obfuscated
                 '/(?<=const\s)(\w+)/' => function ($matches) {
                     return $this->storeKeysAs(self::CONSTANTS, $matches, $this->getUniqueKey());
                 },
+                '/(?<=namespace\s)(.+)/' => function ($matches) {
+                    return $this->storeKeysAs(self::NAMESPACES, $matches, $this->getUniqueKey().';');
+                },
             ],
             $this->localFile->getFileBody(),
             -1,
@@ -74,6 +77,9 @@ class ObfuscatedClass implements Obfuscated
             $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
         }
         foreach ($this->map[self::CONSTANTS] as $methodPair) {
+            $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
+        }
+        foreach ($this->map[self::NAMESPACES] as $methodPair) {
             $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
         }
 

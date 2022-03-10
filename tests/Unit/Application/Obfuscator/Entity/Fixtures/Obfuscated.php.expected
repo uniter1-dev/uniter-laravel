@@ -1,6 +1,6 @@
 <?php
 
-    namespace Foo\Bar\Application\Barbar\Entity;
+    namespace o_name9;
     abstract class o_name0 extends FooBaseClass implements Bar1, Bar2, Bar3
     {
 
