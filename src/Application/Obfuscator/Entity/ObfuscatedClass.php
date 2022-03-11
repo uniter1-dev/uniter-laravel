@@ -9,18 +9,18 @@ use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscated;
 
 class ObfuscatedClass implements Obfuscated
 {
-    private const CLASS_NAME = 'className';
+    private const CLASS_NAMES = 'className';
     private const PROPERTIES = 'properties';
     private const METHODS = 'methods';
     private const CONSTANTS = 'constants';
     private const NAMESPACES = 'namespaces';
 
     private array $map = [
-        self::CLASS_NAME => '',
-        self::PROPERTIES => [],
-        self::METHODS    => [],
-        self::CONSTANTS  => [],
-        self::NAMESPACES => [],
+        self::CLASS_NAMES => [],
+        self::PROPERTIES  => [],
+        self::METHODS     => [],
+        self::CONSTANTS   => [],
+        self::NAMESPACES  => [],
     ];
 
     private LocalFile $localFile;
@@ -37,7 +37,7 @@ class ObfuscatedClass implements Obfuscated
         $obfuscated = preg_replace_callback_array(
             $replacements = [
                 '/(?<=class\s)(\w+)/' => function ($matches) {
-                    return $this->storeKeyAs(self::CLASS_NAME, $matches, $this->getUniqueKey());
+                    return $this->storeKeysAs(self::CLASS_NAMES, $matches, $this->getUniqueKey());
                 },
                 '/(?<=function\s)(\w+)/' => function ($matches) {
                     return $this->storeKeysAs(self::METHODS, $matches, $this->getUniqueKey());
@@ -72,7 +72,12 @@ class ObfuscatedClass implements Obfuscated
 
     public function deObfuscate(string $fileBody): string
     {
-        $deObfuscated = str_replace($this->map['className'][0], $this->map['className'][1], $fileBody);
+        $deObfuscated = $fileBody;
+
+        foreach ($this->map[self::CLASS_NAMES] as $methodPair) {
+            $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
+        }
+
         foreach ($this->map[self::METHODS] as $methodPair) {
             $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
         }
