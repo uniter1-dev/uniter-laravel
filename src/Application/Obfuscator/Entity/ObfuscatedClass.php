@@ -3,20 +3,19 @@
 namespace PhpUniter\PackageLaravel\Application\Obfuscator\Entity;
 
 use Closure;
-use PhpUniter\PackageLaravel\Application\File\Entity\ClassFile;
-use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscationFailed;
+use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscatable;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscated;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscator;
 
 class ObfuscatedClass implements Obfuscated
 {
     private ObfuscateMap $map;
-    private ClassFile $localFile;
+    private Obfuscatable $localFile;
     private Closure $keyGenerator;
     private Obfuscator $obfuscator;
 
-    public function __construct(ClassFile $localFile, Closure $uniqKeyGenerator, Obfuscator $obfuscator)
+    public function __construct(Obfuscatable $localFile, Closure $uniqKeyGenerator, Obfuscator $obfuscator)
     {
         $this->localFile = $localFile;
         $this->keyGenerator = $uniqKeyGenerator;

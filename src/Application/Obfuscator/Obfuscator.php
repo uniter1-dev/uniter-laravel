@@ -2,7 +2,6 @@
 
 namespace PhpUniter\PackageLaravel\Application\Obfuscator;
 
-use PhpUniter\PackageLaravel\Application\File\Entity\ClassFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Entity\ObfuscateMap;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscationFailed;
 
@@ -12,7 +11,7 @@ class Obfuscator
     /**
      * @throws ObfuscationFailed
      */
-    public static function obfuscate(ObfuscateMap $map, ClassFile $localFile, callable $getKeySaver): string
+    public static function obfuscate(ObfuscateMap $map, Obfuscatable $localFile, callable $getKeySaver): string
     {
         $obfuscated = preg_replace_callback_array(
             $replacements = [
