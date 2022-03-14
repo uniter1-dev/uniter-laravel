@@ -9,20 +9,7 @@ use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscated;
 
 class ObfuscatedClass implements Obfuscated
 {
-    private const CLASS_NAMES = 'className';
-    private const PROPERTIES = 'properties';
-    private const METHODS = 'methods';
-    private const CONSTANTS = 'constants';
-    private const NAMESPACES = 'namespaces';
-
-    private array $map = [
-        self::CLASS_NAMES => [],
-        self::PROPERTIES  => [],
-        self::METHODS     => [],
-        self::CONSTANTS   => [],
-        self::NAMESPACES  => [],
-    ];
-
+    private ObfuscateMap $map;
     private LocalFile $localFile;
     private Closure $keyGenerator;
 
@@ -30,40 +17,48 @@ class ObfuscatedClass implements Obfuscated
     {
         $this->localFile = $localFile;
         $this->keyGenerator = $uniqKeyGenerator;
+        $this->map = new ObfuscateMap();
     }
 
     public function getObfuscatedFileBody(): string
     {
+        return $this->getObfuscated($this->map, $this->localFile);
+    }
+
+    public function getObfuscated(ObfuscateMap $map, LocalFile $localFile): string
+    {
+        $callback = Closure::fromCallable(function ($matches) use ($map) {
+            return $this->map->storeKeysAs($map::CLASS_NAMES, $matches, $this->getUniqueKey());
+        });
+
         $obfuscated = preg_replace_callback_array(
             $replacements = [
-                '/(?<=class\s)(\w+)/' => function ($matches) {
-                    return $this->storeKeysAs(self::CLASS_NAMES, $matches, $this->getUniqueKey());
+                '/(?<=class\s)(\w+)/'    => $callback,
+                '/(?<=function\s)(\w+)/' => function ($matches) use ($map) {
+                    return $this->map->storeKeysAs($map::METHODS, $matches, $this->getUniqueKey());
                 },
-                '/(?<=function\s)(\w+)/' => function ($matches) {
-                    return $this->storeKeysAs(self::METHODS, $matches, $this->getUniqueKey());
+                '/(?<=const\s)(\w+)/' => function ($matches) use ($map) {
+                    return $this->map->storeKeysAs($map::CONSTANTS, $matches, $this->getUniqueKey());
                 },
-                '/(?<=const\s)(\w+)/' => function ($matches) {
-                    return $this->storeKeysAs(self::CONSTANTS, $matches, $this->getUniqueKey());
-                },
-                '/(?<=namespace\s)(.+)/' => function ($matches) {
-                    return $this->storeKeysAs(self::NAMESPACES, $matches, $this->getUniqueKey().';');
+                '/(?<=namespace\s)(.+)/' => function ($matches) use ($map) {
+                    return $this->map->storeKeysAs($map::NAMESPACES, $matches, $this->getUniqueKey().';');
                 },
             ],
-            $this->localFile->getFileBody(),
+            $localFile->getFileBody(),
             -1,
             $count
         );
 
         if (count($replacements) > $count) {
-            throw new ObfuscationFailed("Obfuscation failed on {$this->localFile->getFilePath()}, count of replacements is not enough");
+            throw new ObfuscationFailed("Obfuscation failed on {$localFile->getFilePath()}, count of replacements is not enough");
         }
 
-        foreach ($this->map[self::METHODS] as $pair) {
+        foreach ($map->getMap()[$map::METHODS] as $pair) {
             $obfuscated = self::replaceInText('->', $pair, $obfuscated, '(');
             $obfuscated = self::replaceInText('::', $pair, $obfuscated, '(');
         }
 
-        foreach ($this->map[self::CONSTANTS] as $pair) {
+        foreach ($map->getMap()[$map::CONSTANTS] as $pair) {
             $obfuscated = self::replaceInText('::', $pair, $obfuscated);
         }
 
@@ -72,19 +67,24 @@ class ObfuscatedClass implements Obfuscated
 
     public function deObfuscate(string $fileBody): string
     {
+        return self::deObf($this->map, $fileBody);
+    }
+
+    public static function deObf(ObfuscateMap $map, string $fileBody): string
+    {
         $deObfuscated = $fileBody;
 
-        foreach ($this->map[self::CLASS_NAMES] as $methodPair) {
+        foreach ($map->getMap()[$map::CLASS_NAMES] as $methodPair) {
             $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
         }
 
-        foreach ($this->map[self::METHODS] as $methodPair) {
+        foreach ($map->getMap()[$map::METHODS] as $methodPair) {
             $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
         }
-        foreach ($this->map[self::CONSTANTS] as $methodPair) {
+        foreach ($map->getMap()[$map::CONSTANTS] as $methodPair) {
             $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
         }
-        foreach ($this->map[self::NAMESPACES] as $methodPair) {
+        foreach ($map->getMap()[$map::NAMESPACES] as $methodPair) {
             $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
         }
 
@@ -103,17 +103,6 @@ class ObfuscatedClass implements Obfuscated
         return ($this->keyGenerator)();
     }
 
-    private function storeKeyAs(string $type, array $matches, string $key): string
-    {
-        $this->map[$type] = [$key, current($matches)];
 
-        return $key;
-    }
 
-    private function storeKeysAs(string $type, array $matches, string $key): string
-    {
-        $this->map[$type][] = [$key, current($matches)];
-
-        return $key;
-    }
 }
