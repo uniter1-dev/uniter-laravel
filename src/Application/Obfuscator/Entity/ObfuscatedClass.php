@@ -4,6 +4,7 @@ namespace PhpUniter\PackageLaravel\Application\Obfuscator\Entity;
 
 use Closure;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
+use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscationFailed;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscated;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscator;
 
@@ -20,19 +21,22 @@ class ObfuscatedClass implements Obfuscated
         $this->map = new ObfuscateMap();
     }
 
+    /**
+     * @throws ObfuscationFailed
+     */
     public function getObfuscatedFileBody(): string
     {
-        return Obfuscator::getObfuscated($this->map, $this->localFile, [$this, 'getKeySaver']);
+        return Obfuscator::obfuscate($this->map, $this->localFile, [$this, 'getKeySaver']);
     }
 
     public function deObfuscate(string $fileBody): string
     {
-        return Obfuscator::deObf($this->map, $fileBody);
+        return Obfuscator::deObfuscate($this->map, $fileBody);
     }
 
     public function getKeySaver(string $mapKey): callable
     {
-        return function ($matches) use ($mapKey) {
+        return function (array $matches) use ($mapKey) {
             return $this->map->storeKeysAs($mapKey, $matches, $this->getUniqueKey());
         };
     }

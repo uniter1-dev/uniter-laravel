@@ -5,26 +5,14 @@ namespace PhpUniter\PackageLaravel\Application\Obfuscator;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Entity\ObfuscateMap;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscationFailed;
-use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
 
 class Obfuscator
 {
-    public function obfuscate(LocalFile $class): array
-    {
-        $newClassBody = $class->getFileBody(); // todo обфусифицировать
 
-        return [new LocalFile($class->getFilePath(), $newClassBody), []]; // todo вернуть map
-    }
-
-    public function deObfuscate(PhpUnitTest $obfuscatedPhpUnitTest, array $map): PhpUnitTest
-    {
-        $res = $obfuscatedPhpUnitTest->getLocalFile()->getFileBody();
-
-        return new PhpUnitTest($obfuscatedPhpUnitTest->getLocalFile(), $res, []);
-    }
-
-
-    public static function getObfuscated(ObfuscateMap $map, LocalFile $localFile, callable $getKeySaver): string
+    /**
+     * @throws ObfuscationFailed
+     */
+    public static function obfuscate(ObfuscateMap $map, LocalFile $localFile, callable $getKeySaver): string
     {
         $obfuscated = preg_replace_callback_array(
             $replacements = [
@@ -55,8 +43,7 @@ class Obfuscator
     }
 
 
-
-    public static function deObf(ObfuscateMap $map, string $fileBody): string
+    public static function deObfuscate(ObfuscateMap $map, string $fileBody): string
     {
         $deObfuscated = $fileBody;
 
@@ -77,7 +64,7 @@ class Obfuscator
         return $deObfuscated;
     }
 
-    private static function replaceInText($prefix, $pair, $subject, $suffix = '')
+    private static function replaceInText($prefix, $pair, $subject, $suffix = ''): string
     {
         $methodInText = $prefix.$pair[1].$suffix;
 
