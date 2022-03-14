@@ -3,6 +3,8 @@
 namespace PhpUniter\PackageLaravel\Application\Obfuscator\Entity;
 
 use Closure;
+use PhpUniter\PackageLaravel\Application\File\Entity\ClassFile;
+use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscationFailed;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscatable;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscated;
@@ -29,6 +31,11 @@ class ObfuscatedClass implements Obfuscated
     public function getObfuscatedFileBody(): string
     {
         return $this->obfuscator->obfuscate($this->map, $this->localFile, [$this, 'getKeySaver']);
+    }
+
+    public function getObfuscated()
+    {
+        return new LocalFile($this->localFile->getFilePath(), $this->getObfuscatedFileBody());
     }
 
     public function deObfuscate(string $fileBody): string

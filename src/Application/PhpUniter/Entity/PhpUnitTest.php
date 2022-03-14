@@ -23,6 +23,14 @@ class PhpUnitTest
     }
 
     /**
+     * @param string $unitTest
+     */
+    public function setUnitTest(string $unitTest): void
+    {
+        $this->unitTest = $unitTest;
+    }
+
+    /**
      * @return string[]
      */
     public function getRepositories(): array

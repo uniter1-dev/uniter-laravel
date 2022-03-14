@@ -26,7 +26,7 @@ class Obfuscator
         );
 
         if (count($replacements) > $count) {
-            throw new ObfuscationFailed("Obfuscation failed on {$localFile->getFilePath()}, count of replacements is not enough");
+            //throw new ObfuscationFailed("Obfuscation failed on {$localFile->getFilePath()}, count of replacements is not enough");
         }
 
         foreach ($map->getMap()[$map::METHODS] as $pair) {
