@@ -28,10 +28,10 @@ class Obfuscator
     {
         $obfuscated = preg_replace_callback_array(
             $replacements = [
-                '/(?<=class\s)(\w+)/'    => $getKeySaver($map, $map::CLASS_NAMES),
-                '/(?<=function\s)(\w+)/' => $getKeySaver($map, $map::METHODS),
-                '/(?<=const\s)(\w+)/'    => $getKeySaver($map, $map::CONSTANTS),
-                '/(?<=namespace\s)(.+)/' => $getKeySaver($map, $map::NAMESPACES),
+                '/(?<=class\s)(\w+)/'    => $getKeySaver($map::CLASS_NAMES),
+                '/(?<=function\s)(\w+)/' => $getKeySaver($map::METHODS),
+                '/(?<=const\s)(\w+)/'    => $getKeySaver($map::CONSTANTS),
+                '/(?<=namespace\s)(.+)/' => $getKeySaver($map::NAMESPACES),
             ],
             $localFile->getFileBody(),
             -1,
