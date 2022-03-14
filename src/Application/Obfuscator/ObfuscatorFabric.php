@@ -15,7 +15,8 @@ class ObfuscatorFabric
                 $obfuscatable,
                 function () {
                     return 'a'.bin2hex(random_bytes(5));
-                }
+                },
+                new Obfuscator(),
             );
         }
 

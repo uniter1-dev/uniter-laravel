@@ -13,12 +13,14 @@ class ObfuscatedClass implements Obfuscated
     private ObfuscateMap $map;
     private LocalFile $localFile;
     private Closure $keyGenerator;
+    private Obfuscator $obfuscator;
 
-    public function __construct(LocalFile $localFile, Closure $uniqKeyGenerator)
+    public function __construct(LocalFile $localFile, Closure $uniqKeyGenerator, Obfuscator $obfuscator)
     {
         $this->localFile = $localFile;
         $this->keyGenerator = $uniqKeyGenerator;
         $this->map = new ObfuscateMap();
+        $this->obfuscator = $obfuscator;
     }
 
     /**
@@ -26,12 +28,12 @@ class ObfuscatedClass implements Obfuscated
      */
     public function getObfuscatedFileBody(): string
     {
-        return Obfuscator::obfuscate($this->map, $this->localFile, [$this, 'getKeySaver']);
+        return $this->obfuscator->obfuscate($this->map, $this->localFile, [$this, 'getKeySaver']);
     }
 
     public function deObfuscate(string $fileBody): string
     {
-        return Obfuscator::deObfuscate($this->map, $fileBody);
+        return $this->obfuscator->deObfuscate($this->map, $fileBody);
     }
 
     public function getKeySaver(string $mapKey): callable
