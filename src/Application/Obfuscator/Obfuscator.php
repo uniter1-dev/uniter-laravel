@@ -7,7 +7,6 @@ use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscationFailed;
 
 class Obfuscator
 {
-
     /**
      * @throws ObfuscationFailed
      */
@@ -15,10 +14,10 @@ class Obfuscator
     {
         $obfuscated = preg_replace_callback_array(
             $replacements = [
-                '/(?<=class\s)(\w+)/'    => $getKeySaver($map::CLASS_NAMES),
-                '/(?<=function\s)(\w+)/' => $getKeySaver($map::METHODS),
-                '/(?<=const\s)(\w+)/'    => $getKeySaver($map::CONSTANTS),
-                '/(?<=namespace\s)(.+)/' => $getKeySaver($map::NAMESPACES),
+                '/(?<=class\s)(\w+)/'       => $getKeySaver($map::CLASS_NAMES),
+                '/(?<=function\s)(\w+)/'    => $getKeySaver($map::METHODS),
+                '/(?<=const\s)(\w+)/'       => $getKeySaver($map::CONSTANTS),
+                '/(?<=namespace\s)([^;]+)/' => $getKeySaver($map::NAMESPACES),
             ],
             $localFile->getFileBody(),
             -1,
@@ -40,7 +39,6 @@ class Obfuscator
 
         return $obfuscated;
     }
-
 
     public static function deObfuscate(ObfuscateMap $map, string $fileBody): string
     {
@@ -69,5 +67,4 @@ class Obfuscator
 
         return str_replace($methodInText, $prefix.$pair[0].$suffix, $subject);
     }
-
 }
