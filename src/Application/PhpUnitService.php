@@ -30,7 +30,7 @@ class PhpUnitService
      * @throws RequestFail
      * @throws Obfuscator\Exception\ObfuscationFailed
      */
-    public function process(LocalFile $file, array $options): PhpUnitTest
+    public function process(LocalFile $file, array $options): phpUnitTest
     {
         return $this->toProcess($file, $options, function (LocalFile $file, array $options) {
             return $this->phpUniterIntegration->generatePhpUnitTest($file, $options);
@@ -52,8 +52,8 @@ class PhpUnitService
         $obfuscatedSourceText = $obfuscator->getObfuscated();
         $phpUnitTest = $integration($obfuscatedSourceText, $options);
         $testText = $phpUnitTest->getUnitTest();
-        $phpUnitTest->setUnitTest($obfuscator->deObfuscate($testText));
-        $this->testPlacer->place($phpUnitTest);
+        $obfuscatedTestText = $obfuscator->deObfuscate($testText);
+        $this->testPlacer->placeUnitTest($file->getFilePath(), $obfuscatedTestText);
 
         return $phpUnitTest;
     }
