@@ -37,10 +37,11 @@ class PhpUnitService
      */
     public function process(LocalFile $file, array $options): phpUnitTest
     {
-        return $this->toProcess($file, $options, function (LocalFile $file, array $options) {
+        $data = $this->toProcess($file, $options, function (LocalFile $file, array $options) {
             return $this->phpUniterIntegration->generatePhpUnitTest($file, $options);
         },
         $this->uniqKeyGenerator);
+        return $data[0];
     }
 
     /**
@@ -49,7 +50,7 @@ class PhpUnitService
      * @throws GuzzleException
      * @throws RequestFail
      */
-    public function toProcess(LocalFile $file, array $options, callable $integration, callable $uniqKeyGenerator): PhpUnitTest
+    public function toProcess(LocalFile $file, array $options, callable $integration, callable $uniqKeyGenerator): array
     {
         $obfuscateble = ClassFile::make($file);
         $obfuscator = new ObfuscatedClass(
@@ -59,10 +60,10 @@ class PhpUnitService
         );
         $obfuscatedSourceText = $obfuscator->makeObfuscated();
         $phpUnitTest = $integration($obfuscatedSourceText, $options);
-        $testText = $phpUnitTest->getUnitTest();
-        $obfuscatedTestText = $obfuscator->deObfuscate($testText);
-        $this->testPlacer->placeUnitTest($file->getFilePath(), $obfuscatedTestText);
+        $testObfuscatedGenerated = $phpUnitTest->getUnitTest();
+        $deObfuscated = $obfuscator->deObfuscate($testObfuscatedGenerated);
+        $this->testPlacer->placeUnitTest($file->getFilePath(), $deObfuscated);
 
-        return $phpUnitTest;
+        return [$phpUnitTest, $testObfuscatedGenerated, $obfuscatedSourceText];
     }
 }
