@@ -3,8 +3,10 @@
 namespace PhpUniter\PackageLaravel\Tests\Unit\Application\Obfuscator\Entity;
 
 use PHPUnit\Framework\TestCase;
+use PhpUniter\PackageLaravel\Application\File\Entity\ClassFile;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Entity\ObfuscatedClass;
+use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscator;
 
 class ObfuscatedClassTest extends TestCase
 {
@@ -23,8 +25,9 @@ class ObfuscatedClassTest extends TestCase
         };
 
         $obfuscatedClassObject = new ObfuscatedClass(
-            $localFile,
-            $keyGenerator
+            ClassFile::make($localFile),
+            $keyGenerator,
+            new Obfuscator()
         );
         $obfuscated = $obfuscatedClassObject->getObfuscatedFileBody();
         $this->assertEquals(trim($expected), trim($obfuscated));

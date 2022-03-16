@@ -57,7 +57,7 @@ class PhpUnitService
             $uniqKeyGenerator,
             new Obfuscator(),
         );
-        $obfuscatedSourceText = $obfuscator->getObfuscated();
+        $obfuscatedSourceText = $obfuscator->makeObfuscated();
         $phpUnitTest = $integration($obfuscatedSourceText, $options);
         $testText = $phpUnitTest->getUnitTest();
         $obfuscatedTestText = $obfuscator->deObfuscate($testText);

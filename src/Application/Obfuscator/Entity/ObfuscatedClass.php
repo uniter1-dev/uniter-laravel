@@ -3,7 +3,6 @@
 namespace PhpUniter\PackageLaravel\Application\Obfuscator\Entity;
 
 use Closure;
-
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscationFailed;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscatable;
@@ -14,6 +13,7 @@ class ObfuscatedClass implements Obfuscated
 {
     private ObfuscateMap $map;
     private Obfuscatable $localFile;
+    private string $obfuscated = '';
     private Closure $keyGenerator;
     private Obfuscator $obfuscator;
 
@@ -30,13 +30,15 @@ class ObfuscatedClass implements Obfuscated
      */
     public function getObfuscatedFileBody(): string
     {
-        return $this->obfuscator->obfuscate($this->map, $this->localFile, [$this, 'getKeySaver']);
+        $this->obfuscated = $this->obfuscator->obfuscate($this->map, $this->localFile, [$this, 'getKeySaver']);
+
+        return $this->obfuscated;
     }
 
     /**
      * @throws ObfuscationFailed
      */
-    public function getObfuscated(): LocalFile
+    public function makeObfuscated(): LocalFile
     {
         return new LocalFile($this->localFile->getFilePath(), $this->getObfuscatedFileBody());
     }
@@ -56,5 +58,13 @@ class ObfuscatedClass implements Obfuscated
     public function getUniqueKey(): string
     {
         return ($this->keyGenerator)();
+    }
+
+    /**
+     * @return string
+     */
+    public function getObfuscated(): string
+    {
+        return $this->obfuscated;
     }
 }
