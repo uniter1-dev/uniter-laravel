@@ -8,7 +8,6 @@ use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Controller\Console\Cli\GeneratePhpUniterTestCommand;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
-use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepository;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
 
@@ -66,13 +65,9 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(PhpUnitService::class, function (Application $app) {
-            return new PhpUnitService(
-                new PhpUniterIntegration($app->make(GenerateClient::class), $app->make(GenerateRequest::class)),
-                new Placer(new FileRepository()),
-                function () {
-                    return 'a'.bin2hex(random_bytes(5));
-                },
-            );
+            return new PhpUnitService($app->make(PhpUniterIntegration::class), $app->make(Placer::class), function () {
+                return 'a'.uniqid();
+            });
         });
     }
 }
