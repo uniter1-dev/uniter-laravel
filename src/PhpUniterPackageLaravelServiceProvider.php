@@ -4,8 +4,11 @@ namespace PhpUniter\PackageLaravel;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use PhpUniter\PackageLaravel\Application\PhpUnitService;
+use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Controller\Console\Cli\GeneratePhpUniterTestCommand;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
+use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepository;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
 
@@ -45,11 +48,8 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             return new GenerateClient();
         });
 
-        $this->app->bind(PhpUniterIntegration::class, function (Application $app) {
-            return new PhpUniterIntegration(
-                new GenerateClient(),
-                $app->make(GenerateRequest::class)
-            );
+        $this->app->bind(GenerateClient::class, function (Application $app) {
+            return new GenerateClient();
         });
 
         $this->app->bind(GenerateRequest::class, function (Application $app) {
@@ -62,6 +62,16 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
                     ],
                     'timeout' => 2,
                 ]
+            );
+        });
+
+        $this->app->bind(PhpUnitService::class, function (Application $app) {
+            return new PhpUnitService(
+                new PhpUniterIntegration($app->make(GenerateClient::class), $app->make(GenerateRequest::class)),
+                new Placer(new FileRepository()),
+                function () {
+                    return 'a'.bin2hex(random_bytes(5));
+                },
             );
         });
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace PhpUniter\PackageLaravel\Tests;
 
 use Illuminate\Contracts\Console\Kernel;
 
@@ -13,7 +13,8 @@ trait CreatesApplicationPackageLaravel
      */
     public function createApplication()
     {
-        $app = require __DIR__.'/../bootstrap/app.php';
+        $path = __DIR__.'/../../../../bootstrap/app.php';
+        $app = require $path;
 
         $app->make(Kernel::class)->bootstrap();
 
