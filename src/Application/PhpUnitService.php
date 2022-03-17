@@ -41,6 +41,7 @@ class PhpUnitService
             return $this->phpUniterIntegration->generatePhpUnitTest($file, $options);
         },
         $this->uniqKeyGenerator);
+
         return $data[0];
     }
 
@@ -62,7 +63,8 @@ class PhpUnitService
         $phpUnitTest = $integration($obfuscatedSourceText, $options);
         $testObfuscatedGenerated = $phpUnitTest->getUnitTest();
         $deObfuscated = $obfuscator->deObfuscate($testObfuscatedGenerated);
-        $this->testPlacer->placeUnitTest($file->getFilePath(), $deObfuscated);
+        $pathToTest = config('php-uniter.unitTestsDirectory').'/'.dirname($file->getFilePath()).'/'.$phpUnitTest->getClassName().'.php';
+        $this->testPlacer->placeUnitTest($pathToTest, $deObfuscated);
 
         return [$phpUnitTest, $testObfuscatedGenerated, $obfuscatedSourceText];
     }

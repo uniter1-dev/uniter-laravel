@@ -42,11 +42,13 @@ class PhpUniterIntegration
         $generatedTestJson = $unitTest->getBody()->getContents();
         $generatedTest = json_decode($generatedTestJson, true);
         $generatedTestText = $generatedTest['test'];
+        $className = $generatedTest['class'];
 
         return new PhpUnitTest(
             $localFile,
             $generatedTestText,
             $generatedTest,
+            $className
         );
     }
 }

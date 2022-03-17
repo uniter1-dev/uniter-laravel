@@ -8,13 +8,15 @@ class PhpUnitTest
 {
     private LocalFile $localFile;
     private string $unitTest;
+    private string $className;
     private array $repositories;
 
-    public function __construct(LocalFile $localFile, string $unitTest, array $repositories)
+    public function __construct(LocalFile $localFile, string $unitTest, array $repositories, string $className)
     {
         $this->localFile = $localFile;
         $this->unitTest = $unitTest;
         $this->repositories = $repositories;
+        $this->className = $className;
     }
 
     public function getUnitTest(): string
@@ -33,5 +35,13 @@ class PhpUnitTest
     public function getLocalFile(): LocalFile
     {
         return $this->localFile;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClassName(): string
+    {
+        return $this->className;
     }
 }

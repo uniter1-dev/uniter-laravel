@@ -28,6 +28,7 @@ class ObfuscatePackageMockTest extends TestCase
                 'code'  => 200,
                 'stats' => ['1', '2'],
                 'log'   => 'warnings list',
+                'class' => 'Foo'
             ]);
 
             $mock = new MockHandler([
