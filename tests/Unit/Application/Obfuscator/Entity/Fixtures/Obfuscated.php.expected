@@ -1,73 +1,74 @@
 <?php
 
-    namespace o_name9;
-    abstract class o_name0 extends FooBaseClass implements Bar1, Bar2, Bar3
+namespace _obf373938;
+
+abstract class _obf373839 extends FooBaseClass implements Bar1, Bar2, Bar3
+{
+    public $numbers = ['one', 'two', 'three', 'four', 'five', 'six'];
+    public $v = 0; // comment
+    public $path = 'root'; // comment
+
+    const _obf373935 = 'first';
+    const _obf373936 = 0;
+    const _obf373937 = -1;
+
+    public function _obf373930($v,
+                 $w = 'a')
     {
-
-        var $numbers = array("one", "two", "three", "four", "five", "six");
-        var $v = 0; // comment
-        public $path = "root"; // comment
-
-        const o_name6 = 'first';
-        const o_name7 = 0;
-        const o_name8 = -1;
-
-        function o_name1($v,
-                     $w = "a")
-        {
-            $y = $w;
-            $result = foo("arg1",
-                "arg2",
-                10);
-            switch ($v) {
-                case 0:
-                    return 1;
-                case self::o_name6:
-                    echo '1';
-                    break;
-                case 2:
-                    break;
-                default:
-                    $result = 10;
-            }
-            return $result;
+        $y = $w;
+        $result = foo('arg1',
+            'arg2',
+            10);
+        switch ($v) {
+            case 0:
+                return 1;
+            case self::_obf373935:
+                echo '1';
+                break;
+            case 2:
+                break;
+            default:
+                $result = 10;
         }
 
-        public static function o_name2(#[Attribute(1, 2)] $argA, $argB, $argC, $argD, $argE, $argF, $argG, $argH)
-        {
-            $x = $argA + $argB + $argC + $argD + $argE + $argF + $argG + $argH;
-            list($field1, $field2, $field3, $filed4, $field5, $field6) = explode(",", $x);
-            fTwo($argA, $argB, $argC, fThree($argD, $argE, $argF, $argG, $argH));
-            $z = $argA == "Some string" ? "yes" : "no";
-            $colors = array("red", "green", "blue", "black", "white", "gray");
-            $count = count($colors);
-            for ($i = 0; $i < $count; $i++) {
-                $colorString = $colors[$i];
-            }
-        }
-
-        function o_name3($strA, $strB, $strC, $strD)
-        {
-            if ($strA == "one" || $strB == "two" || $strC == "three") {
-                return $strA + $strB + $strC;
-            }
-            $x = $foo->one("a", "b")->two("c", "d", "e")->three("fg")->four();
-            $y = a()->b()->c();
-            return $strD;
-        }
-
-        function o_name4($strA, $strB, $strC, $strD, $strE)
-        {
-            try {
-            } catch (Exception $e) {
-                foo();
-            } finally {
-                // do something
-            }
-            return $strA + $strB + $strC + $strD + $strE;
-        }
-
-        protected abstract function o_name5();
-
+        return $result;
     }
+
+    public static function _obf373931($argA, $argB, $argC, $argD, $argE, $argF, $argG, $argH)
+    {
+        $x = $argA + $argB + $argC + $argD + $argE + $argF + $argG + $argH;
+        list($field1, $field2, $field3, $filed4, $field5, $field6) = explode(',', $x);
+        fTwo($argA, $argB, $argC, fThree($argD, $argE, $argF, $argG, $argH));
+        $z = 'Some string' == $argA ? 'yes' : 'no';
+        $colors = ['red', 'green', 'blue', 'black', 'white', 'gray'];
+        $count = count($colors);
+        for ($i = 0; $i < $count; ++$i) {
+            $colorString = $colors[$i];
+        }
+    }
+
+    public function _obf373932($strA, $strB, $strC, $strD)
+    {
+        if ('one' == $strA || 'two' == $strB || 'three' == $strC) {
+            return $strA + $strB + $strC;
+        }
+        $x = $foo->one('a', 'b')->two('c', 'd', 'e')->three('fg')->four();
+        $y = a()->b()->c();
+
+        return $strD;
+    }
+
+    public function _obf373933($strA, $strB, $strC, $strD, $strE)
+    {
+        try {
+        } catch (Exception $e) {
+            foo();
+        } finally {
+            // do something
+        }
+
+        return $strA + $strB + $strC + $strD + $strE;
+    }
+
+    abstract protected function _obf373934();
 }
