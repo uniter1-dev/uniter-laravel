@@ -42,7 +42,6 @@ class ObfuscateMiddleTest extends TestCase
             ]);
 
             $history = Middleware::history($this->container);
-
             $mock = new MockHandler([
                 new Response(200, ['X-Foo' => 'Bar'], $body),
             ]);
@@ -64,6 +63,7 @@ class ObfuscateMiddleTest extends TestCase
 
         $requestObfuscatedText = self::getRequestBody($this->container);
 
+        self::assertEquals($expected, $requestObfuscatedText);
         self::assertEquals(0, $res);
     }
 
