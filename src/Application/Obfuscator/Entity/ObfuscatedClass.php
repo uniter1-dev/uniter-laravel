@@ -5,6 +5,7 @@ namespace PhpUniter\PackageLaravel\Application\Obfuscator\Entity;
 use Closure;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscationFailed;
+use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\ObfuscateNameMaker;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscatable;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscated;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscator;
@@ -14,13 +15,13 @@ class ObfuscatedClass implements Obfuscated
     private ObfuscateMap $map;
     private Obfuscatable $localFile;
     private string $obfuscated = '';
-    private Closure $keyGenerator;
+    private ObfuscateNameMaker $keyGenerator;
     private Obfuscator $obfuscator;
 
-    public function __construct(Obfuscatable $localFile, Closure $uniqKeyGenerator, Obfuscator $obfuscator)
+    public function __construct(Obfuscatable $localFile, ObfuscateNameMaker $keyGenerator, Obfuscator $obfuscator)
     {
         $this->localFile = $localFile;
-        $this->keyGenerator = $uniqKeyGenerator;
+        $this->keyGenerator = $keyGenerator;
         $this->map = new ObfuscateMap();
         $this->obfuscator = $obfuscator;
     }
@@ -57,7 +58,7 @@ class ObfuscatedClass implements Obfuscated
 
     public function getUniqueKey(): string
     {
-        return ($this->keyGenerator)();
+        return ($this->keyGenerator)->make();
     }
 
     /**

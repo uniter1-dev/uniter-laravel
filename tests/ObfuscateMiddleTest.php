@@ -5,10 +5,13 @@ namespace PhpUniter\PackageLaravel\Tests;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase;
+use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\StableMaker;
+use PhpUniter\PackageLaravel\Application\PhpUnitService;
+use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
@@ -17,13 +20,18 @@ class ObfuscateMiddleTest extends TestCase
 {
     use CreatesApplicationPackageLaravel;
     const FILE = 'BasicTemplateObf';
-    public static int $counter = 123456789;
     public $container = [];
+
     /**
      * @dataProvider getInputAndExpected
      */
     public function testCommand($input, $expected)
     {
+
+        $this->app->bind(PhpUnitService::class, function (Application $app) {
+            return new PhpUnitService($app->make(PhpUniterIntegration::class), $app->make(Placer::class), new StableMaker());
+        });
+
         $this->app->bind(PhpUniterIntegration::class, function (Application $app) use ($expected) {
             $body = json_encode([
                 'test'  => $expected,
@@ -54,11 +62,18 @@ class ObfuscateMiddleTest extends TestCase
             '--base_test_class' => 'NewMockery',
         ])->execute();
 
-        /***  @var Request $req */
-        $req = current($this->container)['request'];
-        $re = $req->getBody()->getContents();
+        $requestObfuscatedText = self::getRequestBody($this->container);
 
         self::assertEquals(0, $res);
+    }
+
+    public static function getRequestBody(array $container)
+    {
+        /***  @var Request $req */
+        $req = current($container)['request'];
+        $re = json_decode($req->getBody()->getContents());
+
+        return $re->class;
     }
 
     public function getCases(): array

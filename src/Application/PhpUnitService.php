@@ -9,6 +9,7 @@ use PhpUniter\PackageLaravel\Application\File\Exception\DirectoryPathWrong;
 use PhpUniter\PackageLaravel\Application\File\Exception\FileNotAccessed;
 use PhpUniter\PackageLaravel\Application\File\Exception\RequestFail;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Entity\ObfuscatedClass;
+use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\ObfuscateNameMaker;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscator;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
@@ -17,16 +18,16 @@ class PhpUnitService
 {
     private Placer $testPlacer;
     private PhpUniterIntegration $phpUniterIntegration;
+    private ObfuscateNameMaker $keyGenerator;
     /**
      * @var callable
      */
-    private $uniqKeyGenerator;
 
-    public function __construct(PhpUniterIntegration $phpUniterIntegration, Placer $testPlacer, callable $uniqKeyGenerator)
+    public function __construct(PhpUniterIntegration $phpUniterIntegration, Placer $testPlacer, ObfuscateNameMaker $keyGenerator)
     {
         $this->phpUniterIntegration = $phpUniterIntegration;
         $this->testPlacer = $testPlacer;
-        $this->uniqKeyGenerator = $uniqKeyGenerator;
+        $this->keyGenerator = $keyGenerator;
     }
 
     /**
@@ -40,7 +41,7 @@ class PhpUnitService
         $data = $this->toProcess($file, $options, function (LocalFile $file, array $options) {
             return $this->phpUniterIntegration->generatePhpUnitTest($file, $options);
         },
-        $this->uniqKeyGenerator);
+        $this->keyGenerator);
 
         return $data[0];
     }
@@ -51,12 +52,12 @@ class PhpUnitService
      * @throws GuzzleException
      * @throws RequestFail
      */
-    public function toProcess(LocalFile $file, array $options, callable $integration, callable $uniqKeyGenerator): array
+    public function toProcess(LocalFile $file, array $options, callable $integration, ObfuscateNameMaker $keyGenerator): array
     {
         $obfuscateble = ClassFile::make($file);
         $obfuscator = new ObfuscatedClass(
             $obfuscateble,
-            $uniqKeyGenerator,
+            $keyGenerator,
             new Obfuscator(),
         );
         $obfuscatedSourceText = $obfuscator->makeObfuscated();
