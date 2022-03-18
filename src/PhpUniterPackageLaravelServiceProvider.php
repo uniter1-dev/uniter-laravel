@@ -4,6 +4,7 @@ namespace PhpUniter\PackageLaravel;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\RandomMaker;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Controller\Console\Cli\GeneratePhpUniterTestCommand;
@@ -65,9 +66,7 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(PhpUnitService::class, function (Application $app) {
-            return new PhpUnitService($app->make(PhpUniterIntegration::class), $app->make(Placer::class), function () {
-                return 'a'.uniqid();
-            });
+            return new PhpUnitService($app->make(PhpUniterIntegration::class), $app->make(Placer::class), $app->make(RandomMaker::class));
         });
     }
 }
