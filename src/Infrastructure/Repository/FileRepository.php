@@ -16,6 +16,7 @@ class FileRepository
     public function findOne(string $filePath): LocalFile
     {
 
+        $cwd = getcwd();
         if (Storage::disk('local')->exists($filePath)) {
             return new LocalFile(
                 $filePath,
@@ -39,7 +40,7 @@ class FileRepository
             throw new DirectoryPathWrong("Directory $testDir cannot be created");
         }
 
-        if (file_put_contents($filePath, $unitTestText)) {
+        if (Storage::fake('local')->put($filePath, $unitTestText)) {
             return true;
         }
 
