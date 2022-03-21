@@ -13,6 +13,8 @@ use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\StableMaker;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
+use PhpUniter\PackageLaravel\Infrastructure\Repository\FakeRepository;
+use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepoInterface;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
 
@@ -27,6 +29,7 @@ class ObfuscateFileWriteTest extends TestCase
      */
     public function testCommand($input, $expected)
     {
+        $this->app->bind(FileRepoInterface::class, FakeRepository::class);
 
         $this->app->bind(PhpUnitService::class, function (Application $app) {
             return new PhpUnitService($app->make(PhpUniterIntegration::class), $app->make(Placer::class), new StableMaker());
