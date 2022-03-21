@@ -5,7 +5,7 @@ namespace PhpUniter\PackageLaravel\Controller\Console\Cli;
 use Exception;
 use Illuminate\Console\Command;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
-use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepository;
+use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepoInterface;
 
 class GeneratePhpUniterTestCommand extends Command
 {
@@ -28,7 +28,7 @@ class GeneratePhpUniterTestCommand extends Command
      *
      * @return mixed
      */
-    public function handle(FileRepository $fileRepository, PhpUnitService $phpUnitService)
+    public function handle(FileRepoInterface $fileRepository, PhpUnitService $phpUnitService)
     {
         try {
             $filePath = $this->argument('filePath');

@@ -6,7 +6,7 @@ use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\File\Exception\DirectoryPathWrong;
 use PhpUniter\PackageLaravel\Application\File\Exception\FileNotAccessed;
 
-class FileRepository
+class FileRepository implements FileRepoInterface
 {
     /**
      * @throws FileNotAccessed
@@ -44,7 +44,7 @@ class FileRepository
         throw new FileNotAccessed("File $filePath was not saved");
     }
 
-    private function touchDir(string $dirPath): bool
+    protected function touchDir(string $dirPath): bool
     {
         if (is_dir($dirPath)) {
             return true;

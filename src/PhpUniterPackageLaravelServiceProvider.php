@@ -9,6 +9,8 @@ use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Controller\Console\Cli\GeneratePhpUniterTestCommand;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
+use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepoInterface;
+use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepository;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
 
@@ -51,6 +53,8 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
         $this->app->bind(GenerateClient::class, function (Application $app) {
             return new GenerateClient();
         });
+
+        $this->app->bind(FileRepoInterface::class, FileRepository::class);
 
         $this->app->bind(GenerateRequest::class, function (Application $app) {
             return new GenerateRequest(
