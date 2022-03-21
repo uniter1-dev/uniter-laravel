@@ -5,22 +5,19 @@ namespace PhpUniter\PackageLaravel\Infrastructure\Repository;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\File\Exception\DirectoryPathWrong;
 use PhpUniter\PackageLaravel\Application\File\Exception\FileNotAccessed;
-use Illuminate\Support\Facades\Storage;
 
 class FileRepository
 {
     /**
      * @throws FileNotAccessed
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function findOne(string $filePath): LocalFile
     {
 
-        $cwd = getcwd();
-        if (Storage::disk('local')->exists($filePath)) {
+        if (is_readable($filePath)) {
             return new LocalFile(
                 $filePath,
-                Storage::disk('local')->get($filePath)
+                file_get_contents($filePath)
             );
         }
 
@@ -40,7 +37,7 @@ class FileRepository
             throw new DirectoryPathWrong("Directory $testDir cannot be created");
         }
 
-        if (Storage::fake('local')->put($filePath, $unitTestText)) {
+        if (file_put_contents($filePath, $unitTestText)) {
             return true;
         }
 
@@ -49,10 +46,10 @@ class FileRepository
 
     private function touchDir(string $dirPath): bool
     {
-        if (Storage::disk('local')->exists($dirPath)) {
+        if (is_dir($dirPath)) {
             return true;
         }
 
-        return Storage::disk('local')->makeDirectory($dirPath);
+        return mkdir($dirPath, 0777, true);
     }
 }
