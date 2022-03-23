@@ -64,7 +64,7 @@ class PhpUnitService
         $phpUnitTest = $integration($obfuscatedSourceText, $options);
         $testObfuscatedGenerated = $phpUnitTest->getUnitTest();
         $deObfuscated = $obfuscator->deObfuscate($testObfuscatedGenerated);
-        $pathToTest = config('php-uniter.unitTestsDirectory').'/'.dirname($file->getFilePath()).'/'.$phpUnitTest->getClassName().'.php';
+        $pathToTest = base_path().'/'.config('php-uniter.unitTestsDirectory').'/'.dirname($file->getFilePath()).'/'.$phpUnitTest->getClassName().'.php';
         $this->testPlacer->placeUnitTest($pathToTest, $deObfuscated);
 
         return [$phpUnitTest, $testObfuscatedGenerated, $obfuscatedSourceText];
