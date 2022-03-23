@@ -70,7 +70,7 @@ class ObfuscateFileWriteTest extends TestCase
 
         self::assertEquals($expected, $requestObfuscatedText);
         self::assertEquals(0, $res);
-        self::assertEquals(file_get_contents('resources/tests/obftest.php'), $fakeRepository->getFile('resources/tests/obftest.php'));
+        self::assertEquals(file_get_contents('resources/tests/obftest.php'), $fakeRepository->getFile('tests/Unit/resources/tests/Foo.php'));
     }
 
     public static function getRequestBody(array $container)
