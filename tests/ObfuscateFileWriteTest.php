@@ -30,9 +30,11 @@ class ObfuscateFileWriteTest extends TestCase
     public function testCommand($input, $expected)
     {
         $this->app->bind(FileRepoInterface::class, FakeRepository::class);
-
-        $this->app->bind(PhpUnitService::class, function (Application $app) {
-            return new PhpUnitService($app->make(PhpUniterIntegration::class), $app->make(Placer::class), new StableMaker());
+        $fakeRepository = new FakeRepository();
+        $this->app->bind(PhpUnitService::class, function (Application $app) use ($fakeRepository) {
+            return new PhpUnitService($app->make(PhpUniterIntegration::class),
+                new Placer($fakeRepository),
+            new StableMaker());
         });
 
         $this->app->bind(PhpUniterIntegration::class, function (Application $app) use ($expected) {
@@ -68,6 +70,7 @@ class ObfuscateFileWriteTest extends TestCase
 
         self::assertEquals($expected, $requestObfuscatedText);
         self::assertEquals(0, $res);
+        self::assertEquals(file_get_contents('resources/tests/obftest.php'), $fakeRepository->getFile('resources/tests/obftest.php'));
     }
 
     public static function getRequestBody(array $container)
