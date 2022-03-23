@@ -4,6 +4,8 @@ namespace PhpUniter\PackageLaravel\Controller\Console\Cli;
 
 use Exception;
 use Illuminate\Console\Command;
+use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
+use PhpUniter\PackageLaravel\Application\File\Exception\FileNotAccessed;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepoInterface;
 
@@ -38,7 +40,7 @@ class GeneratePhpUniterTestCommand extends Command
             }
 
             $options = $this->options();
-            $file = $fileRepository->findOne($filePath);
+            $file = $this->findOne($filePath);
 
             $phpUnitTest = $phpUnitService->process($file, $options);
             $log = $phpUnitTest->getRepositories()['log'];
@@ -50,5 +52,21 @@ class GeneratePhpUniterTestCommand extends Command
         }
 
         return 0;
+    }
+
+    /**
+     * @throws FileNotAccessed
+     */
+    public function findOne(string $filePath): LocalFile
+    {
+
+        if (is_readable($filePath)) {
+            return new LocalFile(
+                $filePath,
+                file_get_contents($filePath)
+            );
+        }
+
+        throw new FileNotAccessed("File $filePath was not found");
     }
 }
