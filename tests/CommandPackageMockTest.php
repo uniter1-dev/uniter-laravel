@@ -7,13 +7,9 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase;
-use PhpUniter\PackageLaravel\Application\PhpUnitService;
-use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
-use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepository;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
-
 
 class CommandPackageMockTest extends TestCase
 {
@@ -27,6 +23,7 @@ class CommandPackageMockTest extends TestCase
                 'code'  => 200,
                 'stats' => ['1', '2'],
                 'log'   => 'warnings list',
+                'class' => 'RealTest',
             ]);
 
             $mock = new MockHandler([
@@ -72,6 +69,5 @@ class CommandPackageMockTest extends TestCase
         ])->execute();
 
         self::assertEquals(1, $res);
-
     }
 }

@@ -21,7 +21,6 @@ use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
 class ObfuscateFileWriteTest extends TestCase
 {
     use CreatesApplicationPackageLaravel;
-    const FILE = 'BasicTemplateObf';
     public $container = [];
 
     /**
@@ -68,9 +67,10 @@ class ObfuscateFileWriteTest extends TestCase
 
         $requestObfuscatedText = self::getRequestBody($this->container);
 
-        self::assertEquals($expected, $requestObfuscatedText);
+        self::assertEquals(self::remSpaces($input), self::remSpaces($fakeRepository->getFile('/opt/project/tests/Unit/resources/tests/Foo.php')));
+        self::assertEquals(self::remSpaces($expected), self::remSpaces($requestObfuscatedText));
         self::assertEquals(0, $res);
-        self::assertEquals(file_get_contents('resources/tests/obftest.php'), $fakeRepository->getFile('/opt/project/tests/Unit/resources/tests/Foo.php'));
+
     }
 
     public static function getRequestBody(array $container)
@@ -113,5 +113,10 @@ class ObfuscateFileWriteTest extends TestCase
         $path = __DIR__.$dir;
 
         return file_put_contents($path."{$name}.expected", $actual);
+    }
+
+    public static function remSpaces($text)
+    {
+        return preg_replace('/\s+/', '', $text);
     }
 }

@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use PhpUniter\PackageLaravel\Application\File\Entity\ClassFile;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Entity\ObfuscatedClass;
+use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\StableMaker;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscator;
 
 class ObfuscatedClassTest extends TestCase
@@ -16,17 +17,9 @@ class ObfuscatedClassTest extends TestCase
     public function testGetObfuscated($input, $expected)
     {
         $localFile = new LocalFile('', $input);
-
-        $keys = 'o_name';
-        $keyGenerator = function () use ($keys) {
-            static $i = 0;
-
-            return $keys.($i++);
-        };
-
         $obfuscatedClassObject = new ObfuscatedClass(
             ClassFile::make($localFile),
-            $keyGenerator,
+            new StableMaker(),
             new Obfuscator()
         );
         $obfuscated = $obfuscatedClassObject->getObfuscatedFileBody();
