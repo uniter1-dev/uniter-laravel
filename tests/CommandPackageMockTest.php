@@ -7,7 +7,12 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase;
+use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\StableMaker;
+use PhpUniter\PackageLaravel\Application\PhpUnitService;
+use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
+use PhpUniter\PackageLaravel\Infrastructure\Repository\FakeRepository;
+use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepoInterface;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
 
@@ -17,13 +22,21 @@ class CommandPackageMockTest extends TestCase
 
     public function testCommand()
     {
+        $this->app->bind(FileRepoInterface::class, FakeRepository::class);
+        $fakeRepository = new FakeRepository();
+        $this->app->bind(PhpUnitService::class, function (Application $app) use ($fakeRepository) {
+            return new PhpUnitService($app->make(PhpUniterIntegration::class),
+                new Placer($fakeRepository),
+                new StableMaker());
+        });
+
         $this->app->bind(PhpUniterIntegration::class, function (Application $app) {
             $body = json_encode([
                 'test'  => '<?php abstract class RealTest extends NewMockery {}; ?>',
                 'code'  => 200,
                 'stats' => ['1', '2'],
                 'log'   => 'warnings list',
-                'class' => 'RealTest',
+                'class' => 'Real',
             ]);
 
             $mock = new MockHandler([
