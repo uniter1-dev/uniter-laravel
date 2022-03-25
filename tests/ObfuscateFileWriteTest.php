@@ -70,7 +70,6 @@ class ObfuscateFileWriteTest extends TestCase
         self::assertEquals(self::remSpaces($input), self::remSpaces($fakeRepository->getFile('/opt/project/tests/Unit/resources/tests/Foo.php')));
         self::assertEquals(self::remSpaces($expected), self::remSpaces($requestObfuscatedText));
         self::assertEquals(0, $res);
-
     }
 
     public static function getRequestBody(array $container)

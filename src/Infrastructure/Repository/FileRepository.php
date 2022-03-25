@@ -2,13 +2,11 @@
 
 namespace PhpUniter\PackageLaravel\Infrastructure\Repository;
 
-use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\File\Exception\DirectoryPathWrong;
 use PhpUniter\PackageLaravel\Application\File\Exception\FileNotAccessed;
 
 class FileRepository implements FileRepoInterface
 {
-
     /**
      * @throws DirectoryPathWrong
      * @throws FileNotAccessed

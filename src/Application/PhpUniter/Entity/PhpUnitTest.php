@@ -37,9 +37,6 @@ class PhpUnitTest
         return $this->localFile;
     }
 
-    /**
-     * @return string
-     */
     public function getClassName(): string
     {
         return $this->className;

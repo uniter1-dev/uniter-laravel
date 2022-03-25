@@ -4,7 +4,6 @@ namespace PhpUniter\PackageLaravel\Application;
 
 use PhpUniter\PackageLaravel\Application\File\Exception\DirectoryPathWrong;
 use PhpUniter\PackageLaravel\Application\File\Exception\FileNotAccessed;
-use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
 use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepository;
 
 class Placer

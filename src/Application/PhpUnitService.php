@@ -19,10 +19,10 @@ class PhpUnitService
     private Placer $testPlacer;
     private PhpUniterIntegration $phpUniterIntegration;
     private ObfuscateNameMaker $keyGenerator;
+
     /**
      * @var callable
      */
-
     public function __construct(PhpUniterIntegration $phpUniterIntegration, Placer $testPlacer, ObfuscateNameMaker $keyGenerator)
     {
         $this->phpUniterIntegration = $phpUniterIntegration;

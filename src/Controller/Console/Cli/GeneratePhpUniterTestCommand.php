@@ -59,7 +59,6 @@ class GeneratePhpUniterTestCommand extends Command
      */
     public function findOne(string $filePath): LocalFile
     {
-
         if (is_readable($filePath)) {
             return new LocalFile(
                 $filePath,

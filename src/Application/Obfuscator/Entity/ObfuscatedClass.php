@@ -2,7 +2,6 @@
 
 namespace PhpUniter\PackageLaravel\Application\Obfuscator\Entity;
 
-use Closure;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscationFailed;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\ObfuscateNameMaker;
@@ -61,9 +60,6 @@ class ObfuscatedClass implements Obfuscated
         return ($this->keyGenerator)->make();
     }
 
-    /**
-     * @return string
-     */
     public function getObfuscated(): string
     {
         return $this->obfuscated;
