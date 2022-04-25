@@ -2,19 +2,26 @@
 
 namespace PhpUniter\PackageLaravel;
 
-use GuzzleHttp\Client;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\RandomMaker;
+use PhpUniter\PackageLaravel\Application\PhpUnitService;
+use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Controller\Console\Cli\GeneratePhpUniterTestCommand;
+use PhpUniter\PackageLaravel\Controller\Console\Cli\RegisterPhpUniterUserCommand;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
+use PhpUniter\PackageLaravel\Infrastructure\Repository\UnitTestRepository;
+use PhpUniter\PackageLaravel\Infrastructure\Repository\UnitTestRepositoryInterface;
+use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
+use PhpUniter\PackageLaravel\Infrastructure\Request\RegisterRequest;
 
 class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
      */
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -24,6 +31,7 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             // Registering package commands.
             $this->commands([
                  GeneratePhpUniterTestCommand::class,
+                 RegisterPhpUniterUserCommand::class,
              ]);
         }
     }
@@ -41,23 +49,49 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             return new PhpUniterPackageLaravel();
         });
 
-        $this->app->bind(PhpUniterIntegration::class, function (Application $app) {
-            return new PhpUniterIntegration(
-                new Client(),
-                $app->make(GenerateRequest::class)
+        $this->app->bind(GenerateClient::class, function (Application $app) {
+            return new GenerateClient();
+        });
+
+        $this->app->bind(Placer::class, function (Application $app) {
+            return new Placer(
+                $app->make(UnitTestRepositoryInterface::class)
+            );
+        });
+
+        $this->app->bind(UnitTestRepositoryInterface::class, function (Application $app) {
+            return new UnitTestRepository(
+                config('php-uniter.unitTestsDirectory')
             );
         });
 
         $this->app->bind(GenerateRequest::class, function (Application $app) {
             return new GenerateRequest(
-            'POST',
-                '/api/v1/generator/generate',
+                'POST',
+                config('php-uniter.baseUrl').'/api/v1/generator/generate',
                 [
-                    'auth' => [
-                        'Authorization' => 'Bearer '.config('php-uniter.accessToken'),
-                    ],
-                    'host' => config('php-uniter.baseUrl'),
-                    'timeout' => 2,
+                    'Authorization' => ['Bearer '.config('php-uniter.accessToken')],
+                    'accept'        => ['/json'],
+                    'timeout'       => 2,
+                ]
+            );
+        });
+
+        $this->app->bind(PhpUnitService::class, function (Application $app) {
+            return new PhpUnitService(
+                $app->make(PhpUniterIntegration::class),
+                $app->make(Placer::class),
+                $app->make(RandomMaker::class)
+            );
+        });
+
+        $this->app->bind(RegisterRequest::class, function (Application $app) {
+            return new RegisterRequest(
+                'POST',
+                config('php-uniter.baseUrl').'/api/package-user',
+                [
+                    'accept'        => ['/json'],
+                    'timeout'       => 2,
                 ]
             );
         });

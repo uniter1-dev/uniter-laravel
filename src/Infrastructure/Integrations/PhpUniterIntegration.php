@@ -2,37 +2,50 @@
 
 namespace PhpUniter\PackageLaravel\Infrastructure\Integrations;
 
-use GuzzleHttp\Client;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
+use PhpUniter\PackageLaravel\Infrastructure\Exception\PhpUnitTestInaccessible;
+use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
 
 class PhpUniterIntegration
 {
-    private Client $client;
+    private GenerateClient $client;
     private GenerateRequest $generateRequest;
 
-    public function __construct(Client $client, GenerateRequest $generateRequest)
+    public function __construct(GenerateClient $client, GenerateRequest $generateRequest)
     {
         $this->client = $client;
         $this->generateRequest = $generateRequest;
     }
 
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws PhpUnitTestInaccessible
+     */
     public function generatePhpUnitTest(LocalFile $localFile): PhpUnitTest
     {
-        $unitTest = $this->client->send(
+        $response = $this->client->send(
             $this->generateRequest,
             [
                 'json' => [
-                    'class' => $localFile->getFileBody(),
+                    'class'   => $localFile->getFileBody(),
                 ],
             ]
         );
 
+        if (200 !== $response->getStatusCode()) {
+            throw new PhpUnitTestInaccessible("Generation failed with error '{$response->getReasonPhrase()}'");
+        }
+
+        $generatedTestJson = $response->getBody()->getContents();
+        $generatedTest = json_decode($generatedTestJson, true);
+        $generatedTestText = $generatedTest['test'];
+
         return new PhpUnitTest(
             $localFile,
-            $unitTest['unitTest'],
-            $unitTest['repositories'],
+            $generatedTestText,
+            $generatedTest
         );
     }
 }

@@ -2,46 +2,40 @@
 
 namespace PhpUniter\PackageLaravel\Tests\Unit\Application\Obfuscator\Entity;
 
-use Mockery;
 use PHPUnit\Framework\TestCase;
+use PhpUniter\PackageLaravel\Application\File\Entity\ClassFile;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Entity\ObfuscatedClass;
+use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\StableMaker;
+use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscator;
 
 class ObfuscatedClassTest extends TestCase
 {
     /**
      * @dataProvider getObfuscatedFileBody
-     *
-     *
      */
-    public function testGetObfuscatedFileBody($input, $expected)
+    public function testGetObfuscated($input, $expected)
     {
-        $localFile = Mockery::mock(LocalFile::class);
-        $localFile->shouldReceive('getFileBody')
-            ->andReturn($input);
-
-        $keys = ['className'];
-        $keyGenerator = function() use ($keys) {
-            static $i = 0;
-
-            return $keys[$i++];
-        };
-
+        $localFile = new LocalFile('', $input);
         $obfuscatedClassObject = new ObfuscatedClass(
-            $localFile,
-            $keyGenerator
+            ClassFile::make($localFile),
+            new StableMaker(),
+            new Obfuscator()
         );
+        $obfuscated = $obfuscatedClassObject->getObfuscatedFileBody();
+        $this->assertEquals(trim($expected), trim($obfuscated));
 
-        $this->assertEquals($expected, $obfuscatedClassObject->getObfuscatedFileBody());
+        $deObfuscated = $obfuscatedClassObject->deObfuscate($obfuscated);
+        $this->assertEquals($input, $deObfuscated);
     }
 
     public function getObfuscatedFileBody()
     {
         return [
             [
-                file_get_contents(__DIR__ . '/Fixtures/Obfuscated.php.input'),
-                file_get_contents(__DIR__ . '/Fixtures/Obfuscated.php.obfuscated'),
-            ]
+                file_get_contents(__DIR__.'/Fixtures/Obfuscated.php.input'),
+                file_get_contents(__DIR__.'/Fixtures/Obfuscated.php.expected'),
+            ],
         ];
     }
 }

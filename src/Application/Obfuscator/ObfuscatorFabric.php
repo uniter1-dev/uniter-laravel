@@ -4,19 +4,20 @@ namespace PhpUniter\PackageLaravel\Application\Obfuscator;
 
 use PhpUniter\PackageLaravel\Application\File\Entity\ClassFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Entity\ObfuscatedClass;
-use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscatorNotFound;
+use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\ObfuscateNameMaker;
 
 class ObfuscatorFabric
 {
-    public static function getObfuscated(Obfuscatable $obfuscatable): Obfuscated
+    public static function getObfuscated(Obfuscatable $obfuscatable, ObfuscateNameMaker $keyGenerator): ?Obfuscated
     {
         if ($obfuscatable instanceof ClassFile) {
             return new ObfuscatedClass(
                 $obfuscatable,
-                function () { return 'a' . bin2hex(random_bytes(5)); }
+                $keyGenerator,
+                new Obfuscator(),
             );
         }
 
-        throw new ObfuscatorNotFound('Obfuscator for file type '.get_class($obfuscatable).' was not found');
+        return null;
     }
 }

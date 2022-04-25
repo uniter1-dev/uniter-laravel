@@ -4,72 +4,64 @@ namespace PhpUniter\PackageLaravel\Application\Obfuscator\Entity;
 
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscationFailed;
+use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\ObfuscateNameMaker;
+use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscatable;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscated;
+use PhpUniter\PackageLaravel\Application\Obfuscator\Obfuscator;
 
 class ObfuscatedClass implements Obfuscated
 {
-    private const CLASS_NAME = 'className';
-    private const PROPERTIES = 'properties';
-    private const METHODS = 'methods';
-    private const ARGUMENTS = 'arguments';
-    private const CONSTANTS = 'constants';
-    private const NAMESPACES = 'namespaces';
+    private ObfuscateMap $map;
+    private Obfuscatable $localFile;
+    private string $obfuscated = '';
+    private ObfuscateNameMaker $keyGenerator;
+    private Obfuscator $obfuscator;
 
-    private array $map = [
-        self::CLASS_NAME => '',
-        self::PROPERTIES => [],
-        self::METHODS => [],
-        self::ARGUMENTS => [],
-        self::CONSTANTS => [],
-        self::NAMESPACES => [],
-    ];
-
-    private LocalFile $localFile;
-    private \Closure $keyGenerator;
-
-    public function __construct(LocalFile $localFile, \Closure $uniqKeyGenerator)
+    public function __construct(Obfuscatable $localFile, ObfuscateNameMaker $keyGenerator, Obfuscator $obfuscator)
     {
         $this->localFile = $localFile;
-        $this->keyGenerator = $uniqKeyGenerator;
+        $this->keyGenerator = $keyGenerator;
+        $this->map = new ObfuscateMap();
+        $this->obfuscator = $obfuscator;
     }
 
+    /**
+     * @throws ObfuscationFailed
+     */
     public function getObfuscatedFileBody(): string
     {
-        $obfuscated = preg_replace_callback(
-            $replacements = [
-                '/(?<=class\s)(\w+)/',
-                '/(?<=function\s)(\w+)/',
-            ],
-            function ($matches) {
-                return $this->storeKeyAs(self::CLASS_NAME, $this->getUniqueKey());
-            },
-            $this->localFile->getFileBody(),
-            -1,
-            $count
-        );
+        $this->obfuscated = $this->obfuscator->obfuscate($this->map, $this->localFile, [$this, 'getKeySaver']);
 
-        if (count($replacements) > $count) {
-            throw new ObfuscationFailed(
-                "Obfuscation failed on {$this->localFile->getFilePath()}, count of replacements is not enough"
-            );
-        }
+        return $this->obfuscated;
+    }
 
-        return $obfuscated;
+    /**
+     * @throws ObfuscationFailed
+     */
+    public function makeObfuscated(): LocalFile
+    {
+        return new LocalFile($this->localFile->getFilePath(), $this->getObfuscatedFileBody());
     }
 
     public function deObfuscate(string $fileBody): string
     {
+        return $this->obfuscator->deObfuscate($this->map, $fileBody);
     }
 
-    private function getUniqueKey(): string
+    public function getKeySaver(string $mapKey): callable
     {
-        return ($this->keyGenerator)();
+        return function (array $matches) use ($mapKey) {
+            return $this->map->storeKeysAs($mapKey, $matches, $this->getUniqueKey());
+        };
     }
 
-    private function storeKeyAs(string $type, string $key): string
+    public function getUniqueKey(): string
     {
-        $this->map[$type] = $key;
+        return ($this->keyGenerator)->make();
+    }
 
-        return $key;
+    public function getObfuscated(): string
+    {
+        return $this->obfuscated;
     }
 }

@@ -2,38 +2,26 @@
 
 namespace PhpUniter\PackageLaravel\Application;
 
+use PhpUniter\PackageLaravel\Application\File\Exception\DirectoryPathWrong;
+use PhpUniter\PackageLaravel\Application\File\Exception\FileNotAccessed;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
-use PhpUniter\PackageLaravel\Infrastructure\Repository\FileRepository;
+use PhpUniter\PackageLaravel\Infrastructure\Repository\UnitTestRepositoryInterface;
 
 class Placer
 {
-    private FileRepository $fileRepository;
+    private UnitTestRepositoryInterface $repository;
 
-    public function __construct(FileRepository $fileRepository)
+    public function __construct(UnitTestRepositoryInterface $fileRepository)
     {
-        $this->fileRepository = $fileRepository;
+        $this->repository = $fileRepository;
     }
 
-    public function place(PhpUnitTest $phpUnitTest)
-    {
-        $this->placeUnitTest($phpUnitTest->getUnitTest());
-        $this->placeRepositories($phpUnitTest->getRepositories());
-    }
-
-    /*
-     * @TODO merge strategy: add, replace, diff
+    /**
+     * @throws DirectoryPathWrong
+     * @throws FileNotAccessed
      */
-    private function placeUnitTest(string $unitTest)
+    public function placeUnitTest(PhpUnitTest $phpUnitTest, string $className): int
     {
-        $existingUnitTest = $this->fileRepository->findOne($unitTest);
-        //merge($existingUnitTest, $unitTest);
-    }
-
-    private function placeRepositories(array $repositories)
-    {
-        foreach ($repositories as $repository) {
-            //$existingRepository = findExisting($repository);
-            //merge($existingRepository, $repository);
-        }
+        return $this->repository->saveOne($phpUnitTest, $className);
     }
 }
