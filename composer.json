@@ -1,6 +1,6 @@
 {
     "name": "php-uniter/php-uniter-laravel",
-    "description": "",
+    "description": "PhpUniter integration package. Assistant for automatic test generation. Commands for registration user and for sending yours class to generate test for it.",
     "keywords": [
         "php-uniter",
         "php-uniter-laravel"
