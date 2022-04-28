@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use PhpUniter\PackageLaravel\Application\File\Exception\FileNameNotString;
 use PhpUniter\PackageLaravel\Application\File\Exception\FileNotAccessed;
 use PhpUniter\PackageLaravel\Application\File\LocalFileFabric;
+use PhpUniter\PackageLaravel\Application\Obfuscator\Preprocessor;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use Throwable;
@@ -30,9 +31,10 @@ class GeneratePhpUniterTestCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(PhpUnitService $phpUnitService, LocalFileFabric $localFileFabric): ?int
+    public function handle(PhpUnitService $phpUnitService, LocalFileFabric $localFileFabric, Preprocessor $preprocessor): ?int
     {
         try {
+            chdir(base_path());
             $filePath = $this->argument('filePath');
 
             if (!is_string($filePath)) {
@@ -44,6 +46,7 @@ class GeneratePhpUniterTestCommand extends Command
             }
 
             try {
+                $preprocessor->preprocess($filePath);
                 $file = $localFileFabric::createFile($filePath);
                 /** @var PhpUnitTest $phpUnitTest */
                 $phpUnitTest = $phpUnitService->process($file);

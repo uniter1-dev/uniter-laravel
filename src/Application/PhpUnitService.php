@@ -17,6 +17,7 @@ class PhpUnitService
     private Placer $testPlacer;
     private PhpUniterIntegration $integration;
     private ObfuscateNameMaker $keyGenerator;
+    private bool $toObfuscate;
 
     /**
      * @var callable
@@ -24,11 +25,13 @@ class PhpUnitService
     public function __construct(
         PhpUniterIntegration $phpUniterIntegration,
         Placer $testPlacer,
-        ObfuscateNameMaker $keyGenerator
+        ObfuscateNameMaker $keyGenerator,
+        bool $toObfuscate
     ) {
         $this->integration = $phpUniterIntegration;
         $this->testPlacer = $testPlacer;
         $this->keyGenerator = $keyGenerator;
+        $this->toObfuscate = $toObfuscate;
     }
 
     /**
@@ -49,19 +52,24 @@ class PhpUnitService
             throw new LocalFileEmpty('Local File is Empty');
         }
 
-        $obfuscator = ObfuscatorFabric::getObfuscated($obfuscated, $this->keyGenerator);
+        if ($this->toObfuscate) {
+            $obfuscator = ObfuscatorFabric::getObfuscated($obfuscated, $this->keyGenerator);
 
-        if (is_null($obfuscator)) {
-            throw new ObfucsatorNull('File is not obfuscatable');
+            if (is_null($obfuscator)) {
+                throw new ObfucsatorNull('File is not obfuscatable');
+            }
+
+            $obfuscatedSourceFile = $obfuscator->makeObfuscated();
+
+            $phpUnitTest = $this->integration->generatePhpUnitTest($obfuscatedSourceFile);
+            $testObfuscatedGenerated = $phpUnitTest->getObfuscatedUnitTest();
+
+            $deObfuscated = $obfuscator->deObfuscate($testObfuscatedGenerated);
+            $phpUnitTest->setFinalUnitTest($deObfuscated);
+        } else {
+            $phpUnitTest = $this->integration->generatePhpUnitTest($classFile);
+            $phpUnitTest->setFinalUnitTest($phpUnitTest->getObfuscatedUnitTest());
         }
-
-        $obfuscatedSourceText = $obfuscator->makeObfuscated();
-
-        $phpUnitTest = $this->integration->generatePhpUnitTest($obfuscatedSourceText);
-        $testObfuscatedGenerated = $phpUnitTest->getObfuscatedUnitTest();
-
-        $deObfuscated = $obfuscator->deObfuscate($testObfuscatedGenerated);
-        $phpUnitTest->setFinalUnitTest($deObfuscated);
 
         $className = self::findClassName($classFile);
 

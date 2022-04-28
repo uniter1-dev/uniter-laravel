@@ -5,6 +5,7 @@ namespace PhpUniter\PackageLaravel;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\RandomMaker;
+use PhpUniter\PackageLaravel\Application\Obfuscator\Preprocessor;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Controller\Console\Cli\GeneratePhpUniterTestCommand;
@@ -59,6 +60,10 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             );
         });
 
+        $this->app->bind(Preprocessor::class, function (Application $app) {
+            return new Preprocessor(config('php-uniter.preprocess'));
+        });
+
         $this->app->bind(UnitTestRepositoryInterface::class, function (Application $app) {
             return new UnitTestRepository(
                 config('php-uniter.unitTestsDirectory')
@@ -81,7 +86,8 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             return new PhpUnitService(
                 $app->make(PhpUniterIntegration::class),
                 $app->make(Placer::class),
-                $app->make(RandomMaker::class)
+                $app->make(RandomMaker::class),
+                config('php-uniter.obfuscate')
             );
         });
 
