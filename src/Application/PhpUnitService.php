@@ -26,7 +26,7 @@ class PhpUnitService
         PhpUniterIntegration $phpUniterIntegration,
         Placer $testPlacer,
         ObfuscateNameMaker $keyGenerator,
-        bool $toObfuscate
+        bool $toObfuscate = true
     ) {
         $this->integration = $phpUniterIntegration;
         $this->testPlacer = $testPlacer;

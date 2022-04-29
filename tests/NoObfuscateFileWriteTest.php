@@ -17,7 +17,7 @@ use PhpUniter\PackageLaravel\Infrastructure\Repository\UnitTestRepositoryInterfa
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
 
-class ObfuscateFileWriteTest extends TestCase
+class NoObfuscateFileWriteTest extends TestCase
 {
     use CreatesApplicationPackageLaravel;
     public $container = [];
@@ -32,13 +32,14 @@ class ObfuscateFileWriteTest extends TestCase
         $this->app->bind(PhpUnitService::class, function (Application $app) use ($repository) {
             return new PhpUnitService($app->make(PhpUniterIntegration::class),
                 new Placer($repository),
-                new StableMaker()
+                new StableMaker(),
+                false
             );
         });
 
-        $this->app->bind(PhpUniterIntegration::class, function (Application $app) use ($obfTest) {
+        $this->app->bind(PhpUniterIntegration::class, function (Application $app) use ($result) {
             $body = json_encode([
-                'test'  => $obfTest,
+                'test'  => $result,
                 'code'  => 200,
                 'stats' => ['1', '2'],
                 'log'   => 'warnings list',
@@ -72,7 +73,6 @@ class ObfuscateFileWriteTest extends TestCase
         $deObfuscatedTest = file_get_contents('storage/tests/Unit/opt/project/packages/php-uniter/php-uniter-laravel/tests/Unit/Application/Obfuscator/Entity/Fixtures/FooTest.php');
         $delete = @unlink('storage/tests/Unit/opt/project/packages/php-uniter/php-uniter-laravel/tests/Unit/Application/Obfuscator/Entity/Fixtures/FooTest.php');
 
-        self::assertEquals($obfExpected, $requestObfuscatedText);
         self::assertEquals($result, $deObfuscatedTest);
 
         self::actualize(__DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/ObfuscatedClass.php.expected', $requestObfuscatedText);
