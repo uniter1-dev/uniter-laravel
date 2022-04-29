@@ -19,13 +19,17 @@ User will be registered, and access token will be sent to your email. You need t
 First, you need to set config values to you .env file:
 
 ```bash
-PHP_UNITER_BASE_URL=https://uniter1.tech
-```
-This is web address for our service. Use https://uniter1.tech
-```bash
 PHP_UNITER_ACCESS_TOKEN=***
 ```
 Access token sent after registration to your email.
+
+Other options you may remain as defaults:
+
+```bash
+PHP_UNITER_BASE_URL=https://uniter1.tech
+```
+This is web address for our service. Use https://uniter1.tech
+
 ```bash
 PHP_UNITER_OBFUSCATE=true
 ```
@@ -33,9 +37,9 @@ Obfuscation option. Set it to false if you need no obfuscation for you code.
 ```bash
 PHP_UNITER_UNIT_TEST_BASE_CLASS=PHPUnit\Framework\TestCase
 ```
-Base framework for yours test class. You may not set it - use defaults.
+Base framework for yours test class. 
 ```bash
-PHP_UNITER_UNIT_TESTS_DIRECTORY=storage/tests/Unit
+PHP_UNITER_UNIT_TESTS_DIRECTORY=tests/Unit
 ```
 Base directory to save generated test classes. Check that directory exists and is writable.
 
