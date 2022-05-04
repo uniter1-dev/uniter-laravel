@@ -2,9 +2,9 @@
 
 namespace PhpUniter\PackageLaravel\Application;
 
-use PhpUniter\PackageLaravel\Application\File\Entity\ClassFile;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\File\Exception\ObfucsatorNull;
+use PhpUniter\PackageLaravel\Application\Generation\NamespaceGenerator;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\ObfuscateNameMaker;
 use PhpUniter\PackageLaravel\Application\Obfuscator\ObfuscatorFabric;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
@@ -18,6 +18,7 @@ class PhpUnitService
     private PhpUniterIntegration $integration;
     private ObfuscateNameMaker $keyGenerator;
     private bool $toObfuscate;
+    private NamespaceGenerator $namespaceGenerator;
 
     /**
      * @var callable
@@ -26,12 +27,14 @@ class PhpUnitService
         PhpUniterIntegration $phpUniterIntegration,
         Placer $testPlacer,
         ObfuscateNameMaker $keyGenerator,
+        NamespaceGenerator $namespaceGenerator,
         bool $toObfuscate = true
     ) {
         $this->integration = $phpUniterIntegration;
         $this->testPlacer = $testPlacer;
         $this->keyGenerator = $keyGenerator;
         $this->toObfuscate = $toObfuscate;
+        $this->namespaceGenerator = $namespaceGenerator;
     }
 
     /**
@@ -46,11 +49,7 @@ class PhpUnitService
      */
     public function process(LocalFile $classFile): PhpUnitTest
     {
-        $obfuscated = ClassFile::make($classFile);
-
-        if (is_null($obfuscated)) {
-            throw new LocalFileEmpty('Local File is Empty');
-        }
+        $obfuscated = $classFile;
 
         if ($this->toObfuscate) {
             $obfuscator = ObfuscatorFabric::getObfuscated($obfuscated, $this->keyGenerator);
@@ -60,7 +59,6 @@ class PhpUnitService
             }
 
             $obfuscatedSourceFile = $obfuscator->makeObfuscated();
-
             $phpUnitTest = $this->integration->generatePhpUnitTest($obfuscatedSourceFile);
             $testObfuscatedGenerated = $phpUnitTest->getObfuscatedUnitTest();
 
@@ -73,7 +71,14 @@ class PhpUnitService
 
         $className = self::findClassName($classFile);
 
-        $testSize = $this->testPlacer->placeUnitTest($phpUnitTest, $className);
+        $pathToTest = $phpUnitTest->getLocalFile()->getFilePath();
+        $relativePath = $this->namespaceGenerator->makeRelative($pathToTest);
+
+        $testCode = $this->namespaceGenerator->fetch($phpUnitTest->getFinalUnitTest(), $relativePath);
+
+        $phpUnitTest->setFinalUnitTest($testCode);
+
+        $testSize = $this->testPlacer->placeUnitTest($phpUnitTest, $relativePath, $className);
 
         if (empty($testSize)) {
             throw new GeneratedTestEmpty('Empty test written');

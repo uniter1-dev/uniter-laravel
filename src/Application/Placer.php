@@ -20,8 +20,8 @@ class Placer
      * @throws DirectoryPathWrong
      * @throws FileNotAccessed
      */
-    public function placeUnitTest(PhpUnitTest $phpUnitTest, string $className): int
+    public function placeUnitTest(PhpUnitTest $phpUnitTest, string $relativePath, string $className): int
     {
-        return $this->repository->saveOne($phpUnitTest, $className);
+        return $this->repository->saveOne($phpUnitTest, $relativePath, $className);
     }
 }

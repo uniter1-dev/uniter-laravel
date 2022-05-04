@@ -8,6 +8,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase;
+use PhpUniter\PackageLaravel\Application\Generation\NamespaceGenerator;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\StableMaker;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
@@ -33,13 +34,13 @@ class NoObfuscateFileWriteTest extends TestCase
             return new PhpUnitService($app->make(PhpUniterIntegration::class),
                 new Placer($repository),
                 new StableMaker(),
-                false
+                $app->make(NamespaceGenerator::class),
             );
         });
 
-        $this->app->bind(PhpUniterIntegration::class, function (Application $app) use ($result) {
+        $this->app->bind(PhpUniterIntegration::class, function (Application $app) use ($obfTest) {
             $body = json_encode([
-                'test'  => $result,
+                'test'  => $obfTest,
                 'code'  => 200,
                 'stats' => ['1', '2'],
                 'log'   => 'warnings list',
@@ -66,13 +67,12 @@ class NoObfuscateFileWriteTest extends TestCase
         $command = $this->artisan('php-uniter:generate', [
             'filePath'          => __DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/SourceClass.php.input',
         ]);
-        $command->assertExitCode(0)->expectsOutput('Generated test was written to storage/tests/Unit/opt/project/packages/php-uniter/php-uniter-laravel/tests/Unit/Application/Obfuscator/Entity/Fixtures/FooTest.php')->execute();
+        $command->assertExitCode(0)->expectsOutput('Generated test was written to storage/tests/Unit/packages/php-uniter/php-uniter-laravel/tests/Unit/Application/Obfuscator/Entity/Fixtures/FooTest.php')->execute();
 
         $requestObfuscatedText = self::getResponseBody($this->container);
 
-        $deObfuscatedTest = file_get_contents('storage/tests/Unit/opt/project/packages/php-uniter/php-uniter-laravel/tests/Unit/Application/Obfuscator/Entity/Fixtures/FooTest.php');
-        $delete = @unlink('storage/tests/Unit/opt/project/packages/php-uniter/php-uniter-laravel/tests/Unit/Application/Obfuscator/Entity/Fixtures/FooTest.php');
-
+        $deObfuscatedTest = file_get_contents('storage/tests/Unit/packages/php-uniter/php-uniter-laravel/tests/Unit/Application/Obfuscator/Entity/Fixtures/FooTest.php');
+        $delete = @unlink('storage/tests/Unit/packages/php-uniter/php-uniter-laravel/tests/Unit/Application/Obfuscator/Entity/Fixtures/FooTest.php');
         self::assertEquals($result, $deObfuscatedTest);
 
         self::actualize(__DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/ObfuscatedClass.php.expected', $requestObfuscatedText);

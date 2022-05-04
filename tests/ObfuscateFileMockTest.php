@@ -8,6 +8,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase;
+use PhpUniter\PackageLaravel\Application\Generation\NamespaceGenerator;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\StableMaker;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
@@ -32,7 +33,8 @@ class ObfuscateFileMockTest extends TestCase
         $this->app->bind(PhpUnitService::class, function (Application $app) use ($fakeRepository) {
             return new PhpUnitService($app->make(PhpUniterIntegration::class),
                 new Placer($fakeRepository),
-                new StableMaker()
+                new StableMaker(),
+                $app->make(NamespaceGenerator::class),
             );
         });
 
@@ -67,12 +69,12 @@ class ObfuscateFileMockTest extends TestCase
         $requestObfuscatedText = self::getResponseBody($this->container);
         $deObfuscatedTest = $fakeRepository->getFile('Foo');
 
+        self::actualize(__DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/ObfuscatedClass.php.expected', $requestObfuscatedText);
+        self::actualize(__DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/Deobfuscated.test.expected', $deObfuscatedTest);
+
         self::assertEquals(0, $res);
         self::assertEquals($obfExpected, $requestObfuscatedText);
         self::assertEquals($result, $deObfuscatedTest);
-
-        self::actualize(__DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/ObfuscatedClass.php.expected', $requestObfuscatedText);
-        self::actualize(__DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/Deobfuscated.test.expected', $deObfuscatedTest);
     }
 
     public static function getResponseBody(array $container)

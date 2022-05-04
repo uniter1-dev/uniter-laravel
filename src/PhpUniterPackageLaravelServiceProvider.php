@@ -4,6 +4,7 @@ namespace PhpUniter\PackageLaravel;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use PhpUniter\PackageLaravel\Application\Generation\NamespaceGenerator;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\RandomMaker;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Preprocessor;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
@@ -82,11 +83,16 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             );
         });
 
+        $this->app->bind(NamespaceGenerator::class, function (Application $app) {
+            return new NamespaceGenerator(config('php-uniter.baseNamespace'), config('php-uniter.projectDirectory'));
+        });
+
         $this->app->bind(PhpUnitService::class, function (Application $app) {
             return new PhpUnitService(
                 $app->make(PhpUniterIntegration::class),
                 $app->make(Placer::class),
                 $app->make(RandomMaker::class),
+                $app->make(NamespaceGenerator::class),
                 config('php-uniter.obfuscate')
             );
         });

@@ -6,5 +6,5 @@ use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
 
 interface UnitTestRepositoryInterface
 {
-    public function saveOne(PhpUnitTest $unitTest, string $className): int;
+    public function saveOne(PhpUnitTest $unitTest, string $relativePath, string $className): int;
 }

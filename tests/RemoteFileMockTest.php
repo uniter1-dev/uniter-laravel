@@ -5,6 +5,7 @@ namespace PhpUniter\PackageLaravel\Tests;
 use App\Application\Helpers\Helper;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase;
+use PhpUniter\PackageLaravel\Application\Generation\NamespaceGenerator;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\StableMaker;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
@@ -28,7 +29,8 @@ class RemoteFileMockTest extends TestCase
         $this->app->bind(PhpUnitService::class, function (Application $app) use ($fakeRepository) {
             return new PhpUnitService($app->make(PhpUniterIntegration::class),
                 new Placer($fakeRepository),
-                new StableMaker()
+                new StableMaker(),
+                $app->make(NamespaceGenerator::class),
             );
         });
 

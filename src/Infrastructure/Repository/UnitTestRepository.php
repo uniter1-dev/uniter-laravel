@@ -9,6 +9,7 @@ use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
 class UnitTestRepository implements UnitTestRepositoryInterface
 {
     private string $baseUnitTestsDirectory;
+    private string $filePath;
 
     public function __construct(string $baseUnitTestsDirectory)
     {
@@ -19,9 +20,9 @@ class UnitTestRepository implements UnitTestRepositoryInterface
      * @throws DirectoryPathWrong
      * @throws FileNotAccessed
      */
-    public function saveOne(PhpUnitTest $phpUnitTest, string $className): int
+    public function saveOne(PhpUnitTest $unitTest, string $relativePath, string $className): int
     {
-        $pathToTest = $this->makePath($phpUnitTest, $className);
+        $pathToTest = $this->makePath(dirname($relativePath), $className);
 
         $testDir = dirname($pathToTest);
         $touch = $this->touchDir($testDir);
@@ -30,8 +31,8 @@ class UnitTestRepository implements UnitTestRepositoryInterface
             throw new DirectoryPathWrong("Directory $testDir cannot be created");
         }
 
-        $phpUnitTest->setPathToTest($pathToTest);
-        if ($size = file_put_contents($pathToTest, $phpUnitTest->getFinalUnitTest())) {
+        $unitTest->setPathToTest($pathToTest);
+        if ($size = file_put_contents($pathToTest, $unitTest->getFinalUnitTest())) {
             return $size;
         }
 
@@ -40,22 +41,19 @@ class UnitTestRepository implements UnitTestRepositoryInterface
 
     public function getFile(PhpUnitTest $phpUnitTest, string $className): string
     {
-        return file_get_contents($this->makePath($phpUnitTest, $className));
+        return file_get_contents($this->filePath);
     }
 
-    public function deleteFile(PhpUnitTest $phpUnitTest, string $className): bool
+    public function makePath(string $relativePath, string $className): string
     {
-        return unlink($this->makePath($phpUnitTest, $className));
+        $this->filePath = $this->baseUnitTestsDirectory.self::getRelativeTestPath($relativePath, $className);
+
+        return $this->filePath;
     }
 
-    private function makePath(PhpUnitTest $phpUnitTest, string $className): string
+    private static function getRelativeTestPath(string $relativePath, string $className): string
     {
-        return $this->baseUnitTestsDirectory.self::getRelativeTestPath($phpUnitTest, $className);
-    }
-
-    private static function getRelativeTestPath(PhpUnitTest $phpUnitTest, string $className): string
-    {
-        return dirname($phpUnitTest->getLocalFile()->getFilePath()).'/'.$className.'Test.php';
+        return $relativePath.'/'.$className.'Test.php';
     }
 
     protected function touchDir(string $dirPath): bool
@@ -65,5 +63,10 @@ class UnitTestRepository implements UnitTestRepositoryInterface
         }
 
         return mkdir($dirPath, 0777, true);
+    }
+
+    public function getFilePath(): string
+    {
+        return $this->filePath;
     }
 }

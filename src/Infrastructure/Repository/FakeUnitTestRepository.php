@@ -8,7 +8,7 @@ class FakeUnitTestRepository implements UnitTestRepositoryInterface
 {
     private array $files = [];
 
-    public function saveOne(PhpUnitTest $unitTest, string $className): int
+    public function saveOne(PhpUnitTest $unitTest, string $relativePath, string $className): int
     {
         $this->files[$className] = $unitTest->getFinalUnitTest();
 
