@@ -3,7 +3,6 @@
 namespace PhpUniter\PackageLaravel\Tests\Unit\Application\Obfuscator\Entity;
 
 use PHPUnit\Framework\TestCase;
-use PhpUniter\PackageLaravel\Application\File\Entity\ClassFile;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Entity\ObfuscatedClass;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\StableMaker;
@@ -18,7 +17,7 @@ class ObfuscatedClassTest extends TestCase
     {
         $localFile = new LocalFile('', $input);
         $obfuscatedClassObject = new ObfuscatedClass(
-            ClassFile::make($localFile),
+            $localFile,
             new StableMaker(),
             new Obfuscator()
         );
@@ -33,8 +32,8 @@ class ObfuscatedClassTest extends TestCase
     {
         return [
             [
-                file_get_contents(__DIR__.'/Fixtures/Obfuscated.php.input'),
-                file_get_contents(__DIR__.'/Fixtures/Obfuscated.php.expected'),
+                file_get_contents(__DIR__.'/Fixtures/SourceClass.php.input'),
+                file_get_contents(__DIR__.'/Fixtures/ObfuscatedClass.php.expected'),
             ],
         ];
     }

@@ -69,16 +69,17 @@ class PhpUnitService
             $phpUnitTest->setFinalUnitTest($phpUnitTest->getObfuscatedUnitTest());
         }
 
+        $classText = $classFile->getFileBody();
         $className = self::findClassName($classFile);
 
-        $pathToTest = $phpUnitTest->getLocalFile()->getFilePath();
-        $relativePath = $this->namespaceGenerator->makeRelative($pathToTest);
-
-        $testCode = $this->namespaceGenerator->fetch($phpUnitTest->getFinalUnitTest(), $relativePath);
+        $srcNamespace = $this->namespaceGenerator->findNamespace($classText);
+        $testNamespace = $this->namespaceGenerator->makeNamespace($srcNamespace);
+        $testCode = $this->namespaceGenerator::addNamespace($phpUnitTest->getFinalUnitTest(), $testNamespace);
+        $relativePath = $this->namespaceGenerator->makePathToTest($srcNamespace);
 
         $phpUnitTest->setFinalUnitTest($testCode);
 
-        $testSize = $this->testPlacer->placeUnitTest($phpUnitTest, $relativePath, $className);
+        $testSize = $this->testPlacer->placeUnitTest($phpUnitTest, $relativePath, $className.'Test.php');
 
         if (empty($testSize)) {
             throw new GeneratedTestEmpty('Empty test written');

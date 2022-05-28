@@ -25,6 +25,16 @@ class PathCorrector
         return '/' === $path[0];
     }
 
+    public static function toBackSlashes(string $path): string
+    {
+        return str_replace('/', '\\', $path);
+    }
+
+    public static function toSlashes(string $path): string
+    {
+        return str_replace('\\', '/', $path);
+    }
+
     public static function normaliseBackSlashes(string $path): string
     {
         $path = str_replace('/', '\\', $path);
@@ -72,5 +82,10 @@ class PathCorrector
             (($startWithSeparator ? DIRECTORY_SEPARATOR : $startWithLetterDir) ?
                 $startWithLetterDir.DIRECTORY_SEPARATOR : ''
             ).implode(DIRECTORY_SEPARATOR, $absolutes);
+    }
+
+    public static function subtract(string $string, string $prefix): string
+    {
+        return substr($string, strlen($prefix));
     }
 }

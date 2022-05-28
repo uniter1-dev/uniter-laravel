@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Unit\packages\php-uniter\php-uniter-laravel\tests\Unit\Application\Obfuscator\Entity\Fixtures;
+namespace Tests\Unit\Foo\Bar\Application\Barbar\Entity;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 class FooTest extends MockeryTestCase

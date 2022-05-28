@@ -29,7 +29,7 @@ class ObfuscateFileWriteTest extends TestCase
     public function testCommand($input, $obfExpected, $obfTest, $result)
     {
         $this->app->bind(UnitTestRepositoryInterface::class, UnitTestRepository::class);
-        $repository = new UnitTestRepository(config('php-uniter.unitTestsDirectory'));
+        $repository = new UnitTestRepository(config('php-uniter.projectDirectory'));
         $this->app->bind(PhpUnitService::class, function (Application $app) use ($repository) {
             return new PhpUnitService($app->make(PhpUniterIntegration::class),
                 new Placer($repository),
@@ -62,23 +62,23 @@ class ObfuscateFileWriteTest extends TestCase
             );
         });
         chdir(storage_path());
-        $delete = @unlink('storage/tests/Unit/opt/project/packages/php-uniter/php-uniter-laravel/tests/Unit/Application/Obfuscator/Entity/Fixtures/FooTest.php');
+        $delete = @unlink('/opt/project/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php');
 
         $command = $this->artisan('php-uniter:generate', [
             'filePath'          => __DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/SourceClass.php.input',
         ]);
-        $command->assertExitCode(0)->expectsOutput('Generated test was written to storage/tests/Unit/packages/php-uniter/php-uniter-laravel/tests/Unit/Application/Obfuscator/Entity/Fixtures/FooTest.php')->execute();
+        $command->assertExitCode(0)->expectsOutput('Generated test was written to /opt/project/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php')->execute();
 
         $requestObfuscatedText = self::getResponseBody($this->container);
 
-        $deObfuscatedTest = file_get_contents('storage/tests/Unit/packages/php-uniter/php-uniter-laravel/tests/Unit/Application/Obfuscator/Entity/Fixtures/FooTest.php');
-        $delete = @unlink('storage/tests/Unit/packages/php-uniter/php-uniter-laravel/tests/Unit/Application/Obfuscator/Entity/Fixtures/FooTest.php');
-
-        self::assertEquals($obfExpected, $requestObfuscatedText);
-        self::assertEquals($result, $deObfuscatedTest);
+        $deObfuscatedTest = file_get_contents('/opt/project/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php');
+        $delete = @unlink('/opt/project/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php');
 
         self::actualize(__DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/ObfuscatedClass.php.expected', $requestObfuscatedText);
         self::actualize(__DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/Deobfuscated.test.expected', $deObfuscatedTest);
+
+        self::assertEquals($obfExpected, $requestObfuscatedText);
+        self::assertEquals($result, $deObfuscatedTest);
     }
 
     public static function getResponseBody(array $container)

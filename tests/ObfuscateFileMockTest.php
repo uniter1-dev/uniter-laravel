@@ -67,7 +67,7 @@ class ObfuscateFileMockTest extends TestCase
         ])->execute();
 
         $requestObfuscatedText = self::getResponseBody($this->container);
-        $deObfuscatedTest = $fakeRepository->getFile('Foo');
+        $deObfuscatedTest = $fakeRepository->getFile('FooTest.php');
 
         self::actualize(__DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/ObfuscatedClass.php.expected', $requestObfuscatedText);
         self::actualize(__DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/Deobfuscated.test.expected', $deObfuscatedTest);

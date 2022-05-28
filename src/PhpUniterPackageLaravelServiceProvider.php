@@ -67,24 +67,12 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
 
         $this->app->bind(UnitTestRepositoryInterface::class, function (Application $app) {
             return new UnitTestRepository(
-                config('php-uniter.unitTestsDirectory')
-            );
-        });
-
-        $this->app->bind(GenerateRequest::class, function (Application $app) {
-            return new GenerateRequest(
-                'POST',
-                config('php-uniter.baseUrl').'/api/v1/generator/generate',
-                [
-                    'Authorization' => ['Bearer '.config('php-uniter.accessToken')],
-                    'accept'        => ['/json'],
-                    'timeout'       => 2,
-                ]
+                config('php-uniter.projectDirectory')
             );
         });
 
         $this->app->bind(NamespaceGenerator::class, function (Application $app) {
-            return new NamespaceGenerator(config('php-uniter.baseNamespace'), config('php-uniter.projectDirectory'));
+            return new NamespaceGenerator(config('php-uniter.baseNamespace'), config('php-uniter.unitTestsDirectory'));
         });
 
         $this->app->bind(PhpUnitService::class, function (Application $app) {
@@ -97,15 +85,32 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             );
         });
 
-        $this->app->bind(RegisterRequest::class, function (Application $app) {
-            return new RegisterRequest(
+        $this->app->bind(GenerateRequest::class, function (Application $app) {
+            return new GenerateRequest(
                 'POST',
-                config('php-uniter.baseUrl').'/api/package-user',
+                config('php-uniter.baseUrl').'/api/v1/generator/generate',
                 [
-                    'accept'        => ['/json'],
+                    'Authorization' => ['Bearer '.config('php-uniter.accessToken')],
+                    'accept'        => ['application/json'],
                     'timeout'       => 2,
                 ]
             );
+        });
+
+        $this->app->bind(RegisterRequest::class, function (Application $app) {
+            return new RegisterRequest(
+                'POST',
+                config('php-uniter.baseUrl').'/api/v1/access-token',
+                [
+                    'accept'        => ['application/json'],
+                    'timeout'       => 2,
+                ]
+            );
+        });
+
+        // Register the main class to use with the facade
+        $this->app->bind(PhpUnitTestHelper::class, function () {
+            return new PhpUnitTestHelper(config('php-uniter.projectDirectory'));
         });
     }
 }

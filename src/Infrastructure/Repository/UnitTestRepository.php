@@ -8,21 +8,23 @@ use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
 
 class UnitTestRepository implements UnitTestRepositoryInterface
 {
-    private string $baseUnitTestsDirectory;
+    private string $projectRoot;
     private string $filePath;
 
-    public function __construct(string $baseUnitTestsDirectory)
+    public function __construct(string $projectRoot)
     {
-        $this->baseUnitTestsDirectory = $baseUnitTestsDirectory;
+        $this->projectRoot = $projectRoot;
     }
 
     /**
+     * @param string $relativePath // path from project root to test to write
+     *
      * @throws DirectoryPathWrong
      * @throws FileNotAccessed
      */
     public function saveOne(PhpUnitTest $unitTest, string $relativePath, string $className): int
     {
-        $pathToTest = $this->makePath(dirname($relativePath), $className);
+        $pathToTest = $this->projectRoot.'/'.$relativePath.'/'.$className;
 
         $testDir = dirname($pathToTest);
         $touch = $this->touchDir($testDir);
@@ -46,7 +48,7 @@ class UnitTestRepository implements UnitTestRepositoryInterface
 
     public function makePath(string $relativePath, string $className): string
     {
-        $this->filePath = $this->baseUnitTestsDirectory.self::getRelativeTestPath($relativePath, $className);
+        $this->filePath = $this->projectRoot.'/'.self::getRelativeTestPath($relativePath, $className);
 
         return $this->filePath;
     }
