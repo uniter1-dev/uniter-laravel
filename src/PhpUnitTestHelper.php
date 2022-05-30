@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace PhpUniter\PackageLaravel;
 
-use PhpUniter\PhpUniterPackage\Exceptions\ClassNotFound;
+
+use PhpUniter\PackageLaravel\Infrastructure\Exception\ClassNotFound;
 
 /**
  * Class PhpUnitTestHelper.
@@ -48,9 +49,9 @@ class PhpUnitTestHelper
      */
     private function getClassBody(string $fullyQualifiedClassName): string
     {
-        chdir($this->projectRoot);
+        //chdir($this->projectRoot);
 
-        $loader = require 'vendor/autoload.php';
+        $loader = require $this->projectRoot.'/vendor/autoload.php';
 
         if ($classFilePath = $loader->findFile($fullyQualifiedClassName)) {
             if ($classBody = file_get_contents($classFilePath)) {
