@@ -8,8 +8,8 @@ use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
 
 class UnitTestRepository implements UnitTestRepositoryInterface
 {
-    private string $projectRoot;
-    private string $filePath;
+    private $projectRoot;
+    private $filePath;
 
     public function __construct(string $projectRoot)
     {

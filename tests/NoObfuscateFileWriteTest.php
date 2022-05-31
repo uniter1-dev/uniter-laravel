@@ -34,7 +34,7 @@ class NoObfuscateFileWriteTest extends TestCase
             return new PhpUnitService($app->make(PhpUniterIntegration::class),
                 new Placer($repository),
                 new StableMaker(),
-                $app->make(NamespaceGenerator::class),
+                $app->make(NamespaceGenerator::class)
             );
         });
 

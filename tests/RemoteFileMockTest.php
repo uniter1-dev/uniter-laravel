@@ -29,7 +29,7 @@ class RemoteFileMockTest extends TestCase
             return new PhpUnitService($app->make(PhpUniterIntegration::class),
                 new Placer($fakeRepository),
                 new StableMaker(),
-                $app->make(NamespaceGenerator::class),
+                $app->make(NamespaceGenerator::class)
             );
         });
 

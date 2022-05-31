@@ -12,7 +12,7 @@ use PhpUniter\PackageLaravel\Infrastructure\Exception\ClassNotFound;
  */
 class PhpUnitTestHelper
 {
-    private string $projectRoot;
+    private $projectRoot;
 
     public function __construct(string $projectRoot)
     {
