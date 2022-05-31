@@ -65,6 +65,5 @@ class PhpUnitTestHelperTest extends TestCase
 
         $class = new $className(config('php-uniter.projectDirectory'));
         $this->assertNotEmpty($class->getClassBody(MethodAccess::class));
-
     }
 }

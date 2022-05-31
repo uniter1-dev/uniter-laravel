@@ -5,7 +5,6 @@ namespace PhpUniter\PackageLaravel\Controller\Console\Cli;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 use PhpUniter\PackageLaravel\Application\PhpUnitUserRegisterService;
 use Throwable;
@@ -38,9 +37,8 @@ class RegisterPhpUniterUserCommand extends Command
             $validator = Validator::make(
                 ['email'    => $email, 'password' => $password],
                 [
-                    'email'    => 'required|string|email|max:255|unique:users',
-                    'password' => ['required', 'string', Password::min(8)->letters()->numbers(),
-                ],
+                    'email'    => 'required|string|email|max:255',
+                    'password' => ['required', 'string'],
             ]);
 
             if ($validator->fails()) {

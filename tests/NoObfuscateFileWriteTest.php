@@ -62,17 +62,17 @@ class NoObfuscateFileWriteTest extends TestCase
             );
         });
         chdir(storage_path());
-        $delete = @unlink('/opt/project/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php');
+        $delete = self::safeUnlink(config('php-uniter.projectDirectory').'/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php');
 
         $command = $this->artisan('php-uniter:generate', [
             'filePath'          => __DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/SourceClass.php.input',
         ]);
-        $command->assertExitCode(0)->expectsOutput('Generated test was written to /opt/project/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php')->execute();
+        $command->assertExitCode(0)->expectsOutput('Generated test was written to '.config('php-uniter.projectDirectory').'/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php')->execute();
 
         $requestObfuscatedText = self::getResponseBody($this->container);
 
-        $deObfuscatedTest = file_get_contents('/opt/project/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php');
-        $delete = @unlink('/opt/project/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php');
+        $deObfuscatedTest = file_get_contents(config('php-uniter.projectDirectory').'/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php');
+        $delete = self::safeUnlink(config('php-uniter.projectDirectory').'/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php');
         self::assertEquals($result, $deObfuscatedTest);
 
         self::actualize(__DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/ObfuscatedClass.php.expected', $requestObfuscatedText);
@@ -110,7 +110,7 @@ class NoObfuscateFileWriteTest extends TestCase
     public static function actualize(string $path, string $actual, $doIt = false): void
     {
         $dirCurrent = getcwd();
-        $fileExists = file_exists('/opt/project/.actualize');
+        $fileExists = file_exists(config('php-uniter.projectDirectory').'/.actualize');
         if ($doIt || $fileExists) {
             $done = self::updateExpected($path, $actual);
         }

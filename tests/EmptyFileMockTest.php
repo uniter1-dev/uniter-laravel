@@ -18,7 +18,6 @@ class EmptyFileMockTest extends TestCase
         $command = $this->artisan('php-uniter:generate', []);
         try {
             $command
-                ->assertNotExitCode(0)
                 ->run();
         } catch (RuntimeException $e) {
             self::assertEquals('Not enough arguments (missing: "filePath").', $e->getMessage());

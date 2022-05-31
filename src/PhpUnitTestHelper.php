@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace PhpUniter\PackageLaravel;
 
-
 use PhpUniter\PackageLaravel\Infrastructure\Exception\ClassNotFound;
 
 /**
  * Class PhpUnitTestHelper.
+ * useful to make All Methods Public.
  */
 class PhpUnitTestHelper
 {
@@ -49,8 +49,6 @@ class PhpUnitTestHelper
      */
     private function getClassBody(string $fullyQualifiedClassName): string
     {
-        //chdir($this->projectRoot);
-
         $loader = require $this->projectRoot.'/vendor/autoload.php';
 
         if ($classFilePath = $loader->findFile($fullyQualifiedClassName)) {

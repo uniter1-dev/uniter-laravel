@@ -10,8 +10,8 @@ use PhpUniter\PackageLaravel\Application\File\Exception\CodeTypeWrong;
 
 class LocalFileFabric
 {
-    const TYPE_CLASS = 'class';
-    const TYPE_PROCEDURAL = 'procedural';
+    public const TYPE_CLASS = 'class';
+    public const TYPE_PROCEDURAL = 'procedural';
 
     public static function createFile(string $filePath): LocalFile
     {

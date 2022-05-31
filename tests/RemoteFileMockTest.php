@@ -34,7 +34,7 @@ class RemoteFileMockTest extends TestCase
         });
 
         $command = $this->artisan('php-uniter:generate', [
-            'filePath'          => __DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/SourceClass.php.input',
+            'filePath' => __DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/SourceClass.php.input',
         ]);
 
         try {

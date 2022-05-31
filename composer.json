@@ -1,6 +1,6 @@
 {
     "name": "php-uniter/php-uniter-laravel",
-    "description": "",
+    "description": "PhpUniter integration package. Assistant for automatic test generation. Commands for registration user and for sending yours class to generate test for it. Class for converting all methods to public on load",
     "keywords": [
         "php-uniter",
         "php-uniter-laravel"
@@ -16,49 +16,58 @@
         }
     ],
     "require": {
-        "php": "^7.4|^8.0",
-        "guzzlehttp/guzzle": "^7.0@dev",
-        "illuminate/support": "^8.0",
-        "php-uniter/php-uniter-assistant": "dev-main"
+        "php": "^7.2",
+        "ext-json": "*",
+        "fideloper/proxy": "4.4.*",
+        "guzzlehttp/guzzle": "7.4",
+        "laravel/framework": "6.18.8.*",
+        "laravel/tinker": "1.0.*"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.6",
-        "mockery/mockery": "^1.5",
-        "orchestra/testbench": "^6.0",
-        "phpunit/phpunit": "^9.5.10",
-        "vimeo/psalm": "*"
-    },
-    "autoload": {
-        "psr-4": {
-            "PhpUniter\\PackageLaravel\\": "src"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "PhpUniter\\PackageLaravel\\Tests\\": "tests"
-        }
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+        "filp/whoops": "^2.0",
+        "fzaninotto/faker": "^1.4",
+        "mockery/mockery": "^1.0",
+        "nunomaduro/collision": "^3.0",
+        "phpunit/phpunit": "^8.0"
     },
     "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
         "sort-packages": true
     },
     "extra": {
         "laravel": {
-            "providers": [
-                "PhpUniter\\PackageLaravel\\PhpUniterPackageLaravelServiceProvider"
-            ],
-            "aliases": {
-                "PhpUniterPackageLaravel": "PhpUniter\\PackageLaravel\\PhpUniterPackageLaravelFacade"
-            }
+            "dont-discover": []
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/php-uniter/php-uniter-assistant.git"
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "PhpUniter\\PackageLaravel\\": "packages/php-uniter/php-uniter-laravel/src"
+        },
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/",
+            "PhpUniter\\PackageLaravel\\Tests\\": "packages/php-uniter/php-uniter-laravel/tests"
         }
-    ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ]
+    }
 }

@@ -20,7 +20,6 @@ class UnitTestRepository implements UnitTestRepositoryInterface
      * @param string $relativePath // path from project root to test to write
      *
      * @throws DirectoryPathWrong
-     * @throws FileNotAccessed
      */
     public function saveOne(PhpUnitTest $unitTest, string $relativePath, string $className): int
     {
