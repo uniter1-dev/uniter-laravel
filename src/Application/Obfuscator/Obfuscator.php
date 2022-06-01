@@ -25,6 +25,10 @@ class Obfuscator
             $count
         );
 
+        if (!is_string($obfuscated)) {
+            return '';
+        }
+
         foreach ($map->getMap()[$map::METHODS] as $pair) {
             $obfuscated = self::replaceInText('->', $pair, $obfuscated, '(');
             $obfuscated = self::replaceInText('::', $pair, $obfuscated, '(');
@@ -58,10 +62,10 @@ class Obfuscator
         return $deObfuscated;
     }
 
-    private static function replaceInText($prefix, $pair, $subject, $suffix = ''): string
+    private static function replaceInText(string $prefix, array $pair, string $subject, string $suffix = ''): string
     {
-        $methodInText = $prefix.$pair[1].$suffix;
+        $methodInText = $prefix.(string) $pair[1].$suffix;
 
-        return str_replace($methodInText, $prefix.$pair[0].$suffix, $subject);
+        return str_replace($methodInText, $prefix.(string) $pair[0].$suffix, $subject);
     }
 }

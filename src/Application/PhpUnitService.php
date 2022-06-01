@@ -5,6 +5,7 @@ namespace PhpUniter\PackageLaravel\Application;
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\File\Exception\ObfucsatorNull;
 use PhpUniter\PackageLaravel\Application\Generation\NamespaceGenerator;
+use PhpUniter\PackageLaravel\Application\Obfuscator\Entity\ObfuscatedClass;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\ObfuscateNameMaker;
 use PhpUniter\PackageLaravel\Application\Obfuscator\ObfuscatorFabric;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
@@ -20,9 +21,6 @@ class PhpUnitService
     private bool $toObfuscate;
     private NamespaceGenerator $namespaceGenerator;
 
-    /**
-     * @var callable
-     */
     public function __construct(
         PhpUniterIntegration $phpUniterIntegration,
         Placer $testPlacer,
@@ -58,6 +56,8 @@ class PhpUnitService
                 throw new ObfucsatorNull('File is not obfuscatable');
             }
 
+            /** @var LocalFile $obfuscatedSourceFile */
+            /** @var ObfuscatedClass $obfuscator */
             $obfuscatedSourceFile = $obfuscator->makeObfuscated();
             $phpUnitTest = $this->integration->generatePhpUnitTest($obfuscatedSourceFile);
             $testObfuscatedGenerated = $phpUnitTest->getObfuscatedUnitTest();
@@ -88,7 +88,7 @@ class PhpUnitService
         return $phpUnitTest;
     }
 
-    public static function findClassName(LocalFile $classFile)
+    public static function findClassName(LocalFile $classFile): string
     {
         $text = $classFile->getFileBody();
         preg_match('/(?<=class\s)(\w+)/', $text, $matches);

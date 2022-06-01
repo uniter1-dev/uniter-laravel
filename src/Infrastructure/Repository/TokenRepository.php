@@ -4,19 +4,13 @@ namespace PhpUniter\PackageLaravel\Infrastructure\Repository;
 
 class TokenRepository
 {
-    public static function saveToken(string $token): int
+    /**  @psalm-suppress MixedMethodCall */
+    public static function putPermanentEnv(string $key, string $value): void
     {
-        config(['PHP_UNITER_ACCESS_TOKEN' => $token]);
-        self::putPermanentEnv('PHP_UNITER_ACCESS_TOKEN', $token);
-
-        return strlen($token);
-    }
-
-    public static function putPermanentEnv($key, $value)
-    {
+        /** @var string $path */
         $path = app()->environmentFilePath();
 
-        $escaped = preg_quote('='.env($key), '/');
+        $escaped = preg_quote('='.(string) env($key), '/');
 
         file_put_contents($path, preg_replace(
             "/^{$key}{$escaped}/m",

@@ -46,9 +46,11 @@ class PhpUnitTestHelper
 
     /**
      * @throws ClassNotFound
+     * @psalm-suppress UnresolvableInclude
      */
     private function getClassBody(string $fullyQualifiedClassName): string
     {
+        /** @var \Composer\Autoload\ClassLoader $loader */
         $loader = require $this->projectRoot.'/vendor/autoload.php';
 
         if ($classFilePath = $loader->findFile($fullyQualifiedClassName)) {
@@ -74,6 +76,9 @@ class PhpUnitTestHelper
         unlink($fileName);
     }
 
+    /**
+     * @param string[] $classNameExploded
+     */
     private static function getProxyClassName(array $classNameExploded, string $proxyClassName): string
     {
         $classNameExploded[] = $proxyClassName;

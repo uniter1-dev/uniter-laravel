@@ -29,7 +29,7 @@ class NamespaceGenerator
         return 'namespace '.$path.';';
     }
 
-    private function make($code): string
+    private function make(string $code): string
     {
         $srcNamespace = self::findNamespace($code);
         $path = $this->pathCorrector::normaliseBackSlashes($this->testsNamespace.'\\'.$srcNamespace);
@@ -37,12 +37,12 @@ class NamespaceGenerator
         return 'namespace '.$path.';';
     }
 
-    public function makePathToTest($namespace): string
+    public function makePathToTest(string $namespace): string
     {
         return $this->testsDirectory.'/'.$this->pathCorrector::toSlashes($namespace);
     }
 
-    public static function addNamespace($code, $namespace): string
+    public static function addNamespace(string $code, string $namespace): string
     {
         $replace = '<?php'."\n".$namespace."\n";
 

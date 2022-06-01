@@ -9,8 +9,8 @@ use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\ObfuscateNameMa
 
 class ObfuscatorFabric
 {
-    const TYPE_CLASS = 'class';
-    const TYPE_PROCEDURAL = 'procedural';
+    public const TYPE_CLASS = 'class';
+    public const TYPE_PROCEDURAL = 'procedural';
 
     public static function getObfuscated(LocalFile $obfuscatable, ObfuscateNameMaker $keyGenerator): ?Obfuscated
     {
@@ -37,7 +37,7 @@ class ObfuscatorFabric
         }
     }
 
-    public static function isObfuscatable(LocalFile $obfuscatable)
+    public static function isObfuscatable(LocalFile $obfuscatable): bool
     {
         $filePath = $obfuscatable->getFilePath();
         $fileBody = file_get_contents($filePath);

@@ -40,6 +40,10 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
 
     /**
      * Register the application services.
+     *
+     * @psalm-suppress MixedArgument
+     * @psalm-suppress MixedOperand
+     * @psalm-suppress InvalidScalarArgument
      */
     public function register()
     {

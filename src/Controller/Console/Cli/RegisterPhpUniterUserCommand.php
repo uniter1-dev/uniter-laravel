@@ -17,16 +17,17 @@ class RegisterPhpUniterUserCommand extends Command
      * @var string
      */
     protected $signature = 'php-uniter:register {email} {password}';
+    protected $name = 'php-uniter:register';
 
     /**
      * The console command description.
-     *
-     * @var string
      */
     protected $description = 'Register PhpUniter user';
 
     /**
      * Execute the console command.
+     *
+     * @psalm-suppress InvalidArgument
      */
     public function handle(PhpUnitUserRegisterService $registerService): ?int
     {
@@ -39,7 +40,11 @@ class RegisterPhpUniterUserCommand extends Command
                 [
                     'email'    => 'required|string|email|max:255',
                     'password' => ['required', 'string'],
-            ]);
+                ]);
+
+            if (!is_string($email) || !is_string($password)) {
+                throw new ValidationException($validator);
+            }
 
             if ($validator->fails()) {
                 throw new ValidationException($validator);
@@ -65,7 +70,11 @@ class RegisterPhpUniterUserCommand extends Command
         return 0;
     }
 
-    public static function listMessages(array $messages)
+    /**
+     * @param string[] $messages
+     * @psalm-suppress InvalidArgument
+     */
+    public static function listMessages(array $messages): string
     {
         $res = '';
         foreach ($messages as $key=>$item) {

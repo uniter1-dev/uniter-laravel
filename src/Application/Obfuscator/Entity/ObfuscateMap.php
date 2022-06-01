@@ -20,7 +20,9 @@ class ObfuscateMap
 
     public function storeKeysAs(string $type, array $matches, string $key): string
     {
-        $this->map[$type][] = [$key, current($matches)];
+        if (is_array($this->map[$type])) {
+            $this->map[$type][] = [$key, current($matches)];
+        }
 
         return $key;
     }

@@ -20,11 +20,10 @@ class GeneratePhpUniterTestCommand extends Command
      * @var string
      */
     protected $signature = 'php-uniter:generate {filePath}';
+    protected $name = 'php-uniter:generate';
 
     /**
      * The console command description.
-     *
-     * @var string
      */
     protected $description = 'Generate phpunit test';
 
