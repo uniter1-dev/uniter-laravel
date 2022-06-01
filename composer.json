@@ -16,11 +16,11 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "7.4.*",
         "ext-json": "*",
         "fideloper/proxy": "4.4.*",
         "guzzlehttp/guzzle": "7.4",
-        "laravel/framework": "^6.18.8.*",
+        "laravel/framework": "6.18.8.*",
         "laravel/tinker": "1.0.*"
     },
     "require-dev": {
@@ -35,39 +35,32 @@
         "preferred-install": "dist",
         "sort-packages": true
     },
-    "extra": {
-        "laravel": {
-            "dont-discover": []
-        }
-    },
     "autoload": {
         "psr-4": {
-            "App\\": "app/",
-            "PhpUniter\\PackageLaravel\\": "packages/php-uniter/php-uniter-laravel/src"
-        },
-        "classmap": [
-            "database/seeds",
-            "database/factories"
-        ]
+            "PhpUniter\\PackageLaravel\\": "src"
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/",
-            "PhpUniter\\PackageLaravel\\Tests\\": "packages/php-uniter/php-uniter-laravel/tests"
+            "PhpUniter\\PackageLaravel\\Tests\\": "tests"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PhpUniter\\PackageLaravel\\PhpUniterPackageLaravelServiceProvider"
+            ],
+            "aliases": {
+                "PhpUniterPackageLaravel": "PhpUniter\\PackageLaravel\\PhpUniterPackageLaravelFacade"
+            }
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/php-uniter/php-uniter-assistant.git"
+        }
+    ],
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "scripts": {
-        "post-autoload-dump": [
-            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
-        ],
-        "post-root-package-install": [
-            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
-        ],
-        "post-create-project-cmd": [
-            "@php artisan key:generate --ansi"
-        ]
-    }
+    "prefer-stable": true
 }
