@@ -26,8 +26,6 @@ class RegisterPhpUniterUserCommand extends Command
 
     /**
      * Execute the console command.
-     *
-     * @psalm-suppress InvalidArgument
      */
     public function handle(PhpUnitUserRegisterService $registerService): ?int
     {
@@ -72,7 +70,6 @@ class RegisterPhpUniterUserCommand extends Command
 
     /**
      * @param string[] $messages
-     * @psalm-suppress InvalidArgument
      */
     public static function listMessages(array $messages): string
     {

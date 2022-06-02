@@ -34,4 +34,9 @@ class ObfuscateMap
     {
         return $this->map;
     }
+
+    public function getMapType(string $type): array
+    {
+        return array_key_exists($type, $this->map) && is_array($this->map[$type]) ? $this->map[$type] : [];
+    }
 }
