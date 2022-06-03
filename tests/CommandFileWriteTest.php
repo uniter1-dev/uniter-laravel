@@ -8,12 +8,21 @@ class CommandFileWriteTest extends TestCase
 {
     use CreatesApplicationPackageLaravel;
 
-    public $container = [];
+    public array $container = [];
+    private string $pathToTest;
+    private string $projectRoot;
+
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->pathToTest = (string)config('php-uniter.unitTestsDirectory');
+        $this->projectRoot = base_path();
+    }
+
 
     public function testIsWritable()
     {
-        $pathToTest = config('php-uniter.unitTestsDirectory');
-        $basePath = base_path();
-        self::assertIsWritable($basePath.'/'.$pathToTest);
+        self::assertIsWritable($this->projectRoot.'/'.$this->pathToTest);
     }
 }

@@ -15,13 +15,23 @@ class PhpUnitTestHelperTest extends TestCase
 {
     use CreatesApplicationPackageLaravel;
 
+    private string $pathToTest;
+    private string $projectDirectory;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->pathToTest = (string)config('php-uniter.unitTestsDirectory');
+        $this->projectDirectory = base_path();
+    }
+
     /**
      * @covers \PhpUnitTestHelper::makeAllMethodsPublic
      */
     public function testMakeAllMethodsPublic(): void
     {
         $this->app->bind(PhpUnitTestHelper::class, function () {
-            return new PhpUnitTestHelper(config('php-uniter.projectDirectory'));
+            return new PhpUnitTestHelper($this->projectDirectory);
         });
 
         $testHelper = $this->app->make(PhpUnitTestHelper::class);
@@ -42,7 +52,7 @@ class PhpUnitTestHelperTest extends TestCase
     public function testGetProxyClassName(): void
     {
         $this->app->bind(PhpUnitTestHelper::class, function () {
-            return new PhpUnitTestHelper(config('php-uniter.projectDirectory'));
+            return new PhpUnitTestHelper($this->projectDirectory);
         });
 
         $testHelper = $this->app->make(PhpUnitTestHelper::class);
@@ -57,13 +67,13 @@ class PhpUnitTestHelperTest extends TestCase
     public function testGetClassBody(): void
     {
         $this->app->bind(PhpUnitTestHelper::class, function () {
-            return new PhpUnitTestHelper(config('php-uniter.projectDirectory'));
+            return new PhpUnitTestHelper($this->projectDirectory);
         });
 
         $testHelper = $this->app->make(PhpUnitTestHelper::class);
         $className = $testHelper->makeAllMethodsPublic(PhpUnitTestHelper::class);
 
-        $class = new $className(config('php-uniter.projectDirectory'));
+        $class = new $className($this->projectDirectory);
         $this->assertNotEmpty($class->getClassBody(MethodAccess::class));
     }
 }
