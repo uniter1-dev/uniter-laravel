@@ -9,11 +9,10 @@ class NamespaceGenerator
 
     private PathCorrector $pathCorrector;
 
-    public function __construct(string $testsNamespace, string $testsDirectory)
+    public function __construct(string $testsNamespace, string $testsDirectory, PathCorrector $pathCorrector)
     {
         $this->testsNamespace = $testsNamespace;
-
-        $this->pathCorrector = new PathCorrector();
+        $this->pathCorrector = $pathCorrector;
         $this->testsDirectory = $testsDirectory;
     }
 

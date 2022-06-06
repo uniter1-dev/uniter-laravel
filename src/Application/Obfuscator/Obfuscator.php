@@ -10,6 +10,7 @@ class Obfuscator
 {
     /**
      * @psalm-suppress MixedArgument
+     *
      * @throws ObfuscationFailed
      */
     public static function obfuscate(ObfuscateMap $map, LocalFile $localFile, callable $getKeySaver): string
@@ -45,6 +46,7 @@ class Obfuscator
     /**
      * @psalm-suppress MixedArgument
      * @psalm-suppress MixedAssignment
+     *
      * @throws ObfuscationFailed
      */
     public static function deObfuscate(ObfuscateMap $map, string $fileBody): string
@@ -77,16 +79,17 @@ class Obfuscator
 
     /**
      * @param string[] $methodPair
+     *
      * @throws ObfuscationFailed
      */
     private static function deReplace(array $methodPair, string $deObfuscated): string
     {
-        $one = array_key_exists(0, $methodPair) ? $methodPair[0] : null;
-        $two = array_key_exists(1, $methodPair) ? $methodPair[1] : null;
+        $one = $methodPair[0] ?? null;
+        $two = $methodPair[1] ?? null;
         if (is_null($one) || is_null($two)) {
             throw new ObfuscationFailed('Wrong map structure');
         }
+
         return str_replace($one, $two, $deObfuscated);
     }
-
 }

@@ -49,9 +49,6 @@ class PhpUnitTest
         $this->pathToTest = $pathToTest;
     }
 
-    /**
-     * @return array
-     */
     public function getRepositories(): array
     {
         return $this->repositories;

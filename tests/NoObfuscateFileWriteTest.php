@@ -25,15 +25,13 @@ class NoObfuscateFileWriteTest extends TestCase
     /**
      * @var \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
      */
-
     private string $pathToTest;
     private string $projectDirectory;
-
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->pathToTest = (string)config('php-uniter.unitTestsDirectory');
+        $this->pathToTest = (string) config('php-uniter.unitTestsDirectory');
         $this->projectDirectory = base_path();
     }
 

@@ -21,7 +21,7 @@ class PhpUnitTestHelperTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->pathToTest = (string)config('php-uniter.unitTestsDirectory');
+        $this->pathToTest = (string) config('php-uniter.unitTestsDirectory');
         $this->projectDirectory = base_path();
     }
 

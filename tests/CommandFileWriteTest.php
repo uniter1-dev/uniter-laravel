@@ -12,14 +12,12 @@ class CommandFileWriteTest extends TestCase
     private string $pathToTest;
     private string $projectRoot;
 
-
     public function setUp(): void
     {
         parent::setUp();
-        $this->pathToTest = (string)config('php-uniter.unitTestsDirectory');
+        $this->pathToTest = (string) config('php-uniter.unitTestsDirectory');
         $this->projectRoot = base_path();
     }
-
 
     public function testIsWritable()
     {
