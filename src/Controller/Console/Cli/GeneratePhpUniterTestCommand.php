@@ -30,7 +30,7 @@ class GeneratePhpUniterTestCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(PhpUnitService $phpUnitService, Preprocessor $preprocessor): ?int
+    public function handle(PhpUnitService $phpUnitService, Preprocessor $preprocessor, ObfuscatorFabric $obfuscatorFabric): ?int
     {
         try {
             chdir(base_path());
@@ -46,9 +46,9 @@ class GeneratePhpUniterTestCommand extends Command
 
             try {
                 $preprocessor->preprocess($filePath);
-                $localFile = ObfuscatorFabric::createFile($filePath);
+                $localFile = $obfuscatorFabric->createFile($filePath);
                 /** @var PhpUnitTest $phpUnitTest */
-                $phpUnitTest = $phpUnitService->process($localFile);
+                $phpUnitTest = $phpUnitService->process($localFile, $obfuscatorFabric);
                 $this->info('Generated test was written to '.$phpUnitTest->getPathToTest());
             } catch (GuzzleException $e) {
                 $this->error($e->getMessage());

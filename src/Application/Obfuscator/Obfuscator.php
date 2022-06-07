@@ -13,7 +13,7 @@ class Obfuscator
      *
      * @throws ObfuscationFailed
      */
-    public static function obfuscate(ObfuscateMap $map, LocalFile $localFile, callable $getKeySaver): string
+    public function obfuscate(ObfuscateMap $map, LocalFile $localFile, callable $getKeySaver): string
     {
         $obfuscated = preg_replace_callback_array(
             $replacements = [
@@ -32,12 +32,12 @@ class Obfuscator
         }
 
         foreach ($map->getMapType($map::METHODS) as $pair) {
-            $obfuscated = self::replaceInText('->', $pair, $obfuscated, '(');
-            $obfuscated = self::replaceInText('::', $pair, $obfuscated, '(');
+            $obfuscated = $this->replaceInText('->', $pair, $obfuscated, '(');
+            $obfuscated = $this->replaceInText('::', $pair, $obfuscated, '(');
         }
 
         foreach ($map->getMapType($map::CONSTANTS) as $pair) {
-            $obfuscated = self::replaceInText('::', $pair, $obfuscated);
+            $obfuscated = $this->replaceInText('::', $pair, $obfuscated);
         }
 
         return $obfuscated;
@@ -49,28 +49,28 @@ class Obfuscator
      *
      * @throws ObfuscationFailed
      */
-    public static function deObfuscate(ObfuscateMap $map, string $fileBody): string
+    public function deObfuscate(ObfuscateMap $map, string $fileBody): string
     {
         $deObfuscated = $fileBody;
 
         foreach ($map->getMapType($map::CLASS_NAMES) as $methodPair) {
-            $deObfuscated = self::deReplace($methodPair, $deObfuscated);
+            $deObfuscated = $this->deReplace($methodPair, $deObfuscated);
         }
 
         foreach ($map->getMapType($map::METHODS) as $methodPair) {
-            $deObfuscated = self::deReplace($methodPair, $deObfuscated);
+            $deObfuscated = $this->deReplace($methodPair, $deObfuscated);
         }
         foreach ($map->getMapType($map::CONSTANTS) as $methodPair) {
-            $deObfuscated = self::deReplace($methodPair, $deObfuscated);
+            $deObfuscated = $this->deReplace($methodPair, $deObfuscated);
         }
         foreach ($map->getMapType($map::NAMESPACES) as $methodPair) {
-            $deObfuscated = self::deReplace($methodPair, $deObfuscated);
+            $deObfuscated = $this->deReplace($methodPair, $deObfuscated);
         }
 
         return $deObfuscated;
     }
 
-    private static function replaceInText(string $prefix, array $pair, string $subject, string $suffix = ''): string
+    private function replaceInText(string $prefix, array $pair, string $subject, string $suffix = ''): string
     {
         $methodInText = $prefix.(string) $pair[1].$suffix;
 
@@ -82,7 +82,7 @@ class Obfuscator
      *
      * @throws ObfuscationFailed
      */
-    private static function deReplace(array $methodPair, string $deObfuscated): string
+    private function deReplace(array $methodPair, string $deObfuscated): string
     {
         $one = $methodPair[0] ?? null;
         $two = $methodPair[1] ?? null;

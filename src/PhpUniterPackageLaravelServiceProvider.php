@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use PhpUniter\PackageLaravel\Application\Generation\NamespaceGenerator;
 use PhpUniter\PackageLaravel\Application\Generation\PathCorrector;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\RandomMaker;
+use PhpUniter\PackageLaravel\Application\Obfuscator\ObfuscatorFabric;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Preprocessor;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
@@ -58,6 +59,10 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
 
         $this->app->bind(GenerateClient::class, function (Application $app) {
             return new GenerateClient();
+        });
+
+        $this->app->bind(ObfuscatorFabric::class, function (Application $app) {
+            return new ObfuscatorFabric();
         });
 
         $this->app->bind(Placer::class, function (Application $app) {

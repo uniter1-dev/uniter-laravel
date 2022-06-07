@@ -13,10 +13,8 @@ class NamespaceTest extends TestCase
      * @dataProvider getCases
      *
      * @param string $input
-     *
-     * @return void
      */
-    public function testFindNamespace($input)
+    public function testFindNamespace($input): void
     {
         $namespace = NamespaceGenerator::findNamespace($input);
         self::assertEquals('PhpUniter\PackageLaravel\Tests', $namespace);

@@ -10,6 +10,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase;
 use PhpUniter\PackageLaravel\Application\Generation\NamespaceGenerator;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\StableMaker;
+use PhpUniter\PackageLaravel\Application\Obfuscator\ObfuscatorFabric;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
@@ -48,6 +49,9 @@ class NoObfuscateFileWriteTest extends TestCase
                 new StableMaker(),
                 $app->make(NamespaceGenerator::class)
             );
+        });
+        $this->app->bind(ObfuscatorFabric::class, function (Application $app) {
+            return new ObfuscatorFabric();
         });
 
         $this->app->bind(PhpUniterIntegration::class, function (Application $app) use ($obfTest) {

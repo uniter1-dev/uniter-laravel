@@ -52,7 +52,7 @@ class RegisterPhpUniterUserCommand extends Command
                 $this->info('User registered. Access token in your email. Put it in .env file - PHP_UNITER_ACCESS_TOKEN');
             }
         } catch (ValidationException $e) {
-            $this->error("Command Validation Error: \n".self::listMessages($e->errors()));
+            $this->error("Command Validation Error: \n".$this->listMessages($e->errors()));
 
             return 1;
         } catch (GuzzleException $e) {
@@ -71,7 +71,7 @@ class RegisterPhpUniterUserCommand extends Command
     /**
      * @param string[] $messages
      */
-    public static function listMessages(array $messages): string
+    public function listMessages(array $messages): string
     {
         $res = '';
         foreach ($messages as $key=>$item) {

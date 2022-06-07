@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace PhpUniter\PackageLaravel;
 
+use Composer\Autoload\ClassLoader;
 use PhpUniter\PackageLaravel\Infrastructure\Exception\ClassNotFound;
 
 /**
@@ -12,7 +13,7 @@ use PhpUniter\PackageLaravel\Infrastructure\Exception\ClassNotFound;
  */
 class PhpUnitTestHelper
 {
-    private $projectRoot;
+    private string $projectRoot;
 
     public function __construct(string $projectRoot)
     {
@@ -34,9 +35,9 @@ class PhpUnitTestHelper
         try {
             $proxyClassBody = $this->renderProxyClass($fullyQualifiedClassName, $className, $proxyClassName);
 
-            self::loadClass($proxyClassName, $proxyClassBody);
+            $this->loadClass($proxyClassName, $proxyClassBody);
 
-            $fullyQualifiedProxyClassName = self::getProxyClassName($classNameExploded, $proxyClassName);
+            $fullyQualifiedProxyClassName = $this->getProxyClassName($classNameExploded, $proxyClassName);
         } catch (ClassNotFound $exception) {
             return null;
         }
@@ -50,7 +51,7 @@ class PhpUnitTestHelper
      */
     private function getClassBody(string $fullyQualifiedClassName): string
     {
-        /** @var \Composer\Autoload\ClassLoader $loader */
+        /** @var ClassLoader $loader */
         $loader = require $this->projectRoot.'/vendor/autoload.php';
 
         if ($classFilePath = $loader->findFile($fullyQualifiedClassName)) {
@@ -65,7 +66,7 @@ class PhpUnitTestHelper
     /**
      * @psalm-suppress UnresolvableInclude
      */
-    private static function loadClass(string $proxyFileName, string $proxyClassBody): void
+    private function loadClass(string $proxyFileName, string $proxyClassBody): void
     {
         $fileName = __DIR__."/${proxyFileName}.php";
 
