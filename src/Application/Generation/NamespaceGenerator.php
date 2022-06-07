@@ -4,36 +4,56 @@ namespace PhpUniter\PackageLaravel\Application\Generation;
 
 class NamespaceGenerator
 {
-    private string $globalNamespace;
-    private string $projectDirectory;
+    private string $testsNamespace;
+    private string $testsDirectory;
 
-    public function __construct(string $globalNamespace, string $projectDirectory)
+    private PathCorrector $pathCorrector;
+
+    public function __construct(string $testsNamespace, string $testsDirectory, PathCorrector $pathCorrector)
     {
-        $this->globalNamespace = $globalNamespace;
-        $this->projectDirectory = $projectDirectory;
+        $this->testsNamespace = $testsNamespace;
+        $this->pathCorrector = $pathCorrector;
+        $this->testsDirectory = $testsDirectory;
     }
 
-    public function fetch($code, $path): string
+    public function fetch(string $code): string
     {
-        return self::addNamespace($code, $this->make($path));
+        return $this->addNamespace($code, $this->make($code));
     }
 
-    private function make($path): string
+    public function makeNamespace(string $srcNamespace): string
     {
-        $path = PathCorrector::normaliseBackSlashes($this->globalNamespace.'\\'.dirname($path));
+        $path = $this->pathCorrector->normaliseBackSlashes($this->testsNamespace.'\\'.$srcNamespace);
 
         return 'namespace '.$path.';';
     }
 
-    public function makeRelative($path): string
+    private function make(string $code): string
     {
-        return PathCorrector::findRelativePath($path, $this->projectDirectory);
+        $srcNamespace = $this->findNamespace($code);
+        $path = $this->pathCorrector->normaliseBackSlashes($this->testsNamespace.'\\'.$srcNamespace);
+
+        return 'namespace '.$path.';';
     }
 
-    private static function addNamespace($code, $namespace): string
+    public function makePathToTest(string $namespace): string
+    {
+        return $this->testsDirectory.'/'.$this->pathCorrector->toSlashes($namespace);
+    }
+
+    public function addNamespace(string $code, string $namespace): string
     {
         $replace = '<?php'."\n".$namespace."\n";
 
         return str_replace("<?php\n", $replace, $code);
+    }
+
+    public static function findNamespace(string $classText): string
+    {
+        if (preg_match('/(?<=namespace\s)([^;]+)/', $classText, $matches)) {
+            return $matches[0];
+        }
+
+        return '';
     }
 }

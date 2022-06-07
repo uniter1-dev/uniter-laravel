@@ -2,8 +2,6 @@
 
 namespace PhpUniter\PackageLaravel\Application;
 
-use PhpUniter\PackageLaravel\Application\File\Exception\DirectoryPathWrong;
-use PhpUniter\PackageLaravel\Application\File\Exception\FileNotAccessed;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
 use PhpUniter\PackageLaravel\Infrastructure\Repository\UnitTestRepositoryInterface;
 
@@ -17,8 +15,7 @@ class Placer
     }
 
     /**
-     * @throws DirectoryPathWrong
-     * @throws FileNotAccessed
+     * @param string $relativePath // path from project root to test to write
      */
     public function placeUnitTest(PhpUnitTest $phpUnitTest, string $relativePath, string $className): int
     {

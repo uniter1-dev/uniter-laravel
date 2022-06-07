@@ -12,7 +12,7 @@ class PhpUnitTest
     private array $repositories;
     private string $pathToTest = '';
 
-    public function __construct(LocalFile $localFile, string $unitTest, array $repositories)
+    public function __construct(LocalFile $localFile, string $unitTest, array $repositories = [])
     {
         $this->localFile = $localFile;
         $this->obfuscatedUnitTest = $unitTest;
@@ -22,14 +22,6 @@ class PhpUnitTest
     public function getObfuscatedUnitTest(): string
     {
         return $this->obfuscatedUnitTest;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getRepositories(): array
-    {
-        return $this->repositories;
     }
 
     public function getLocalFile(): LocalFile
@@ -55,5 +47,10 @@ class PhpUnitTest
     public function setPathToTest(string $pathToTest): void
     {
         $this->pathToTest = $pathToTest;
+    }
+
+    public function getRepositories(): array
+    {
+        return $this->repositories;
     }
 }

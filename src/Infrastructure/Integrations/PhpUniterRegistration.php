@@ -2,8 +2,8 @@
 
 namespace PhpUniter\PackageLaravel\Infrastructure\Integrations;
 
+use GuzzleHttp\Exception\GuzzleException;
 use PhpUniter\PackageLaravel\Infrastructure\Exception\PhpUnitRegistrationInaccessible;
-use PhpUniter\PackageLaravel\Infrastructure\Exception\PhpUnitTestInaccessible;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\RegisterRequest;
 
@@ -19,8 +19,8 @@ class PhpUniterRegistration
     }
 
     /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws PhpUnitTestInaccessible
+     * @throws GuzzleException
+     * @throws PhpUnitRegistrationInaccessible
      */
     public function registerPhpUnitUser(string $email, string $password): bool
     {

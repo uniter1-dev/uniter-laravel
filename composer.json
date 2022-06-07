@@ -1,6 +1,6 @@
 {
     "name": "php-uniter/php-uniter-laravel",
-    "description": "PhpUniter integration package. Assistant for automatic test generation. Commands for registration user and for sending yours class to generate test for it.",
+    "description": "PhpUniter integration package. Assistant for automatic test generation. Commands for registration user and for sending yours class to generate test for it. Class for converting all methods to public on load",
     "keywords": [
         "php-uniter",
         "php-uniter-laravel"
@@ -16,17 +16,20 @@
         }
     ],
     "require": {
-        "php": "^7.4|^8.0",
-        "guzzlehttp/guzzle": "^7.0@dev",
-        "illuminate/support": "^8.0",
+        "php": "7.4.*",
         "ext-json": "*",
-        "ext-mbstring": "*"
+        "guzzlehttp/guzzle": "^7.4",
+        "laravel/framework": "^6.18.8"
+
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.6",
-        "mockery/mockery": "^1.5",
-        "orchestra/testbench": "^6.0",
-        "phpunit/phpunit": "^9.5.10"
+        "mockery/mockery": "^1.0",
+        "phpunit/phpunit": "^8.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
     },
     "autoload": {
         "psr-4": {
@@ -37,13 +40,6 @@
         "psr-4": {
             "PhpUniter\\PackageLaravel\\Tests\\": "tests"
         }
-    },
-    "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-    },
-    "config": {
-        "sort-packages": true
     },
     "extra": {
         "laravel": {
@@ -60,5 +56,7 @@
             "type": "vcs",
             "url": "https://github.com/php-uniter/php-uniter-assistant.git"
         }
-    ]
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

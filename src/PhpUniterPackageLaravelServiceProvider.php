@@ -5,7 +5,9 @@ namespace PhpUniter\PackageLaravel;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use PhpUniter\PackageLaravel\Application\Generation\NamespaceGenerator;
+use PhpUniter\PackageLaravel\Application\Generation\PathCorrector;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\RandomMaker;
+use PhpUniter\PackageLaravel\Application\Obfuscator\ObfuscatorFabric;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Preprocessor;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
@@ -40,6 +42,10 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
 
     /**
      * Register the application services.
+     *
+     * @psalm-suppress MixedArgument
+     * @psalm-suppress MixedOperand
+     * @psalm-suppress InvalidScalarArgument
      */
     public function register()
     {
@@ -55,6 +61,10 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             return new GenerateClient();
         });
 
+        $this->app->bind(ObfuscatorFabric::class, function (Application $app) {
+            return new ObfuscatorFabric();
+        });
+
         $this->app->bind(Placer::class, function (Application $app) {
             return new Placer(
                 $app->make(UnitTestRepositoryInterface::class)
@@ -67,24 +77,12 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
 
         $this->app->bind(UnitTestRepositoryInterface::class, function (Application $app) {
             return new UnitTestRepository(
-                config('php-uniter.unitTestsDirectory')
-            );
-        });
-
-        $this->app->bind(GenerateRequest::class, function (Application $app) {
-            return new GenerateRequest(
-                'POST',
-                config('php-uniter.baseUrl').'/api/v1/generator/generate',
-                [
-                    'Authorization' => ['Bearer '.config('php-uniter.accessToken')],
-                    'accept'        => ['/json'],
-                    'timeout'       => 2,
-                ]
+                config('php-uniter.projectDirectory')
             );
         });
 
         $this->app->bind(NamespaceGenerator::class, function (Application $app) {
-            return new NamespaceGenerator(config('php-uniter.baseNamespace'), config('php-uniter.projectDirectory'));
+            return new NamespaceGenerator(config('php-uniter.baseNamespace'), config('php-uniter.unitTestsDirectory'), $app->build(PathCorrector::class));
         });
 
         $this->app->bind(PhpUnitService::class, function (Application $app) {
@@ -97,15 +95,32 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             );
         });
 
-        $this->app->bind(RegisterRequest::class, function (Application $app) {
-            return new RegisterRequest(
+        $this->app->bind(GenerateRequest::class, function (Application $app) {
+            return new GenerateRequest(
                 'POST',
-                config('php-uniter.baseUrl').'/api/package-user',
+                config('php-uniter.baseUrl').'/api/v1/generator/generate',
                 [
-                    'accept'        => ['/json'],
+                    'Authorization' => ['Bearer '.config('php-uniter.accessToken')],
+                    'accept'        => ['application/json'],
                     'timeout'       => 2,
                 ]
             );
+        });
+
+        $this->app->bind(RegisterRequest::class, function (Application $app) {
+            return new RegisterRequest(
+                'POST',
+                config('php-uniter.baseUrl').'/api/v1/access-token',
+                [
+                    'accept'        => ['application/json'],
+                    'timeout'       => 2,
+                ]
+            );
+        });
+
+        // Register the main class to use with the facade
+        $this->app->bind(PhpUnitTestHelper::class, function () {
+            return new PhpUnitTestHelper(config('php-uniter.projectDirectory'));
         });
     }
 }

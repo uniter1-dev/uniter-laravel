@@ -9,12 +9,12 @@ use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\ObfuscateNameMa
 
 class ObfuscatorFabric
 {
-    const TYPE_CLASS = 'class';
-    const TYPE_PROCEDURAL = 'procedural';
+    public const TYPE_CLASS = 'class';
+    public const TYPE_PROCEDURAL = 'procedural';
 
-    public static function getObfuscated(LocalFile $obfuscatable, ObfuscateNameMaker $keyGenerator): ?Obfuscated
+    public function getObfuscated(LocalFile $obfuscatable, ObfuscateNameMaker $keyGenerator): ?Obfuscated
     {
-        if (self::isObfuscatable($obfuscatable)) {
+        if ($this->isObfuscatable($obfuscatable)) {
             return new ObfuscatedClass(
                 $obfuscatable,
                 $keyGenerator,
@@ -25,11 +25,14 @@ class ObfuscatorFabric
         return null;
     }
 
-    public static function createFile(string $filePath): LocalFile
+    /**
+     * @throws CodeTypeWrong
+     */
+    public function createFile(string $filePath): LocalFile
     {
         $fileBody = file_get_contents($filePath);
 
-        switch (self::getFileType($fileBody)) {
+        switch ($this->getFileType($fileBody)) {
             case self::TYPE_CLASS:
                 return new LocalFile($filePath, $fileBody);
             default:
@@ -37,15 +40,15 @@ class ObfuscatorFabric
         }
     }
 
-    public static function isObfuscatable(LocalFile $obfuscatable)
+    public function isObfuscatable(LocalFile $obfuscatable): bool
     {
         $filePath = $obfuscatable->getFilePath();
         $fileBody = file_get_contents($filePath);
 
-        return self::TYPE_CLASS == self::getFileType($fileBody);
+        return self::TYPE_CLASS == $this->getFileType($fileBody);
     }
 
-    private static function getFileType(string $fileBody): ?string
+    private function getFileType(string $fileBody): ?string
     {
         $isClassFile = preg_match('/(?<=class\s)(\w+)/', $fileBody);
 

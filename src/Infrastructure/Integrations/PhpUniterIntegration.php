@@ -4,6 +4,7 @@ namespace PhpUniter\PackageLaravel\Infrastructure\Integrations;
 
 use PhpUniter\PackageLaravel\Application\File\Entity\LocalFile;
 use PhpUniter\PackageLaravel\Application\PhpUniter\Entity\PhpUnitTest;
+use PhpUniter\PackageLaravel\Infrastructure\Exception\PhpUnitRegistrationInaccessible;
 use PhpUniter\PackageLaravel\Infrastructure\Exception\PhpUnitTestInaccessible;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateClient;
 use PhpUniter\PackageLaravel\Infrastructure\Request\GenerateRequest;
@@ -21,7 +22,7 @@ class PhpUniterIntegration
 
     /**
      * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws PhpUnitTestInaccessible
+     * @throws PhpUnitRegistrationInaccessible
      */
     public function generatePhpUnitTest(LocalFile $localFile): PhpUnitTest
     {
@@ -39,6 +40,7 @@ class PhpUniterIntegration
         }
 
         $generatedTestJson = $response->getBody()->getContents();
+        /** @var string[] $generatedTest */
         $generatedTest = json_decode($generatedTestJson, true);
         $generatedTestText = $generatedTest['test'];
 

@@ -9,9 +9,11 @@ use PhpUniter\PackageLaravel\Application\Obfuscator\Exception\ObfuscationFailed;
 class Obfuscator
 {
     /**
+     * @psalm-suppress MixedArgument
+     *
      * @throws ObfuscationFailed
      */
-    public static function obfuscate(ObfuscateMap $map, LocalFile $localFile, callable $getKeySaver): string
+    public function obfuscate(ObfuscateMap $map, LocalFile $localFile, callable $getKeySaver): string
     {
         $obfuscated = preg_replace_callback_array(
             $replacements = [
@@ -25,43 +27,69 @@ class Obfuscator
             $count
         );
 
-        foreach ($map->getMap()[$map::METHODS] as $pair) {
-            $obfuscated = self::replaceInText('->', $pair, $obfuscated, '(');
-            $obfuscated = self::replaceInText('::', $pair, $obfuscated, '(');
+        if (!is_string($obfuscated)) {
+            return '';
         }
 
-        foreach ($map->getMap()[$map::CONSTANTS] as $pair) {
-            $obfuscated = self::replaceInText('::', $pair, $obfuscated);
+        foreach ($map->getMapType($map::METHODS) as $pair) {
+            $obfuscated = $this->replaceInText('->', $pair, $obfuscated, '(');
+            $obfuscated = $this->replaceInText('::', $pair, $obfuscated, '(');
+        }
+
+        foreach ($map->getMapType($map::CONSTANTS) as $pair) {
+            $obfuscated = $this->replaceInText('::', $pair, $obfuscated);
         }
 
         return $obfuscated;
     }
 
-    public static function deObfuscate(ObfuscateMap $map, string $fileBody): string
+    /**
+     * @psalm-suppress MixedArgument
+     * @psalm-suppress MixedAssignment
+     *
+     * @throws ObfuscationFailed
+     */
+    public function deObfuscate(ObfuscateMap $map, string $fileBody): string
     {
         $deObfuscated = $fileBody;
 
-        foreach ($map->getMap()[$map::CLASS_NAMES] as $methodPair) {
-            $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
+        foreach ($map->getMapType($map::CLASS_NAMES) as $methodPair) {
+            $deObfuscated = $this->deReplace($methodPair, $deObfuscated);
         }
 
-        foreach ($map->getMap()[$map::METHODS] as $methodPair) {
-            $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
+        foreach ($map->getMapType($map::METHODS) as $methodPair) {
+            $deObfuscated = $this->deReplace($methodPair, $deObfuscated);
         }
-        foreach ($map->getMap()[$map::CONSTANTS] as $methodPair) {
-            $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
+        foreach ($map->getMapType($map::CONSTANTS) as $methodPair) {
+            $deObfuscated = $this->deReplace($methodPair, $deObfuscated);
         }
-        foreach ($map->getMap()[$map::NAMESPACES] as $methodPair) {
-            $deObfuscated = str_replace($methodPair[0], $methodPair[1], $deObfuscated);
+        foreach ($map->getMapType($map::NAMESPACES) as $methodPair) {
+            $deObfuscated = $this->deReplace($methodPair, $deObfuscated);
         }
 
         return $deObfuscated;
     }
 
-    private static function replaceInText($prefix, $pair, $subject, $suffix = ''): string
+    private function replaceInText(string $prefix, array $pair, string $subject, string $suffix = ''): string
     {
-        $methodInText = $prefix.$pair[1].$suffix;
+        $methodInText = $prefix.(string) $pair[1].$suffix;
 
-        return str_replace($methodInText, $prefix.$pair[0].$suffix, $subject);
+        return str_replace($methodInText, $prefix.(string) $pair[0].$suffix, $subject);
+    }
+
+    /**
+     * @param string[] $methodPair
+     *
+     * @throws ObfuscationFailed
+     */
+    private function deReplace(array $methodPair, string $deObfuscated): string
+    {
+        $one = $methodPair[0] ?? null;
+        $two = $methodPair[1] ?? null;
+        if (is_null($one) || is_null($two)) {
+            throw new ObfuscationFailed('Wrong map structure');
+        }
+
+        return str_replace($one, $two, $deObfuscated);
     }
 }
