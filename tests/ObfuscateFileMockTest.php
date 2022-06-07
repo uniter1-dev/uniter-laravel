@@ -10,6 +10,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase;
 use PhpUniter\PackageLaravel\Application\Generation\NamespaceGenerator;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\StableMaker;
+use PhpUniter\PackageLaravel\Application\Obfuscator\ObfuscatorFabric;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
@@ -28,6 +29,9 @@ class ObfuscateFileMockTest extends TestCase
      */
     public function testCommand($input, $obfExpected, $obfTest, $result)
     {
+        $this->app->bind(ObfuscatorFabric::class, function (Application $app) {
+            return new ObfuscatorFabric();
+        });
         $this->app->bind(UnitTestRepositoryInterface::class, FakeUnitTestRepository::class);
         $fakeRepository = new FakeUnitTestRepository();
         $this->app->bind(PhpUnitService::class, function (Application $app) use ($fakeRepository) {

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace PhpUniter\PackageLaravel;
 
-use PhpUniter\PhpUniterPackage\Exceptions\ClassNotFound;
+use Composer\Autoload\ClassLoader;
+use PhpUniter\PackageLaravel\Infrastructure\Exception\ClassNotFound;
 
 /**
  * Class PhpUnitTestHelper.
+ * useful to make All Methods Public.
  */
 class PhpUnitTestHelper
 {
@@ -33,9 +35,9 @@ class PhpUnitTestHelper
         try {
             $proxyClassBody = $this->renderProxyClass($fullyQualifiedClassName, $className, $proxyClassName);
 
-            self::loadClass($proxyClassName, $proxyClassBody);
+            $this->loadClass($proxyClassName, $proxyClassBody);
 
-            $fullyQualifiedProxyClassName = self::getProxyClassName($classNameExploded, $proxyClassName);
+            $fullyQualifiedProxyClassName = $this->getProxyClassName($classNameExploded, $proxyClassName);
         } catch (ClassNotFound $exception) {
             return null;
         }
@@ -45,12 +47,12 @@ class PhpUnitTestHelper
 
     /**
      * @throws ClassNotFound
+     * @psalm-suppress UnresolvableInclude
      */
     private function getClassBody(string $fullyQualifiedClassName): string
     {
-        chdir($this->projectRoot);
-
-        $loader = require 'vendor/autoload.php';
+        /** @var ClassLoader $loader */
+        $loader = require $this->projectRoot.'/vendor/autoload.php';
 
         if ($classFilePath = $loader->findFile($fullyQualifiedClassName)) {
             if ($classBody = file_get_contents($classFilePath)) {
@@ -64,7 +66,7 @@ class PhpUnitTestHelper
     /**
      * @psalm-suppress UnresolvableInclude
      */
-    private static function loadClass(string $proxyFileName, string $proxyClassBody): void
+    private function loadClass(string $proxyFileName, string $proxyClassBody): void
     {
         $fileName = __DIR__."/${proxyFileName}.php";
 
@@ -75,6 +77,9 @@ class PhpUnitTestHelper
         unlink($fileName);
     }
 
+    /**
+     * @param string[] $classNameExploded
+     */
     private static function getProxyClassName(array $classNameExploded, string $proxyClassName): string
     {
         $classNameExploded[] = $proxyClassName;

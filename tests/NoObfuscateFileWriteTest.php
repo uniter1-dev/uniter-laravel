@@ -10,6 +10,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase;
 use PhpUniter\PackageLaravel\Application\Generation\NamespaceGenerator;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\StableMaker;
+use PhpUniter\PackageLaravel\Application\Obfuscator\ObfuscatorFabric;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterIntegration;
@@ -22,6 +23,18 @@ class NoObfuscateFileWriteTest extends TestCase
 {
     use CreatesApplicationPackageLaravel;
     public $container = [];
+    /**
+     * @var \Illuminate\Config\Repository|\Illuminate\Contracts\Foundation\Application|mixed
+     */
+    private string $pathToTest;
+    private string $projectDirectory;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->pathToTest = (string) config('php-uniter.unitTestsDirectory');
+        $this->projectDirectory = base_path();
+    }
 
     /**
      * @dataProvider getInputAndExpected
@@ -29,13 +42,16 @@ class NoObfuscateFileWriteTest extends TestCase
     public function testCommand($input, $obfExpected, $obfTest, $result)
     {
         $this->app->bind(UnitTestRepositoryInterface::class, UnitTestRepository::class);
-        $repository = new UnitTestRepository(config('php-uniter.projectDirectory'));
+        $repository = new UnitTestRepository($this->projectDirectory);
         $this->app->bind(PhpUnitService::class, function (Application $app) use ($repository) {
             return new PhpUnitService($app->make(PhpUniterIntegration::class),
                 new Placer($repository),
                 new StableMaker(),
-                $app->make(NamespaceGenerator::class),
+                $app->make(NamespaceGenerator::class)
             );
+        });
+        $this->app->bind(ObfuscatorFabric::class, function (Application $app) {
+            return new ObfuscatorFabric();
         });
 
         $this->app->bind(PhpUniterIntegration::class, function (Application $app) use ($obfTest) {
@@ -62,17 +78,17 @@ class NoObfuscateFileWriteTest extends TestCase
             );
         });
         chdir(storage_path());
-        $delete = @unlink('/opt/project/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php');
+        $delete = self::safeUnlink($this->projectDirectory.'/'.$this->pathToTest.'/Foo/Bar/Application/Barbar/Entity/FooTest.php');
 
         $command = $this->artisan('php-uniter:generate', [
             'filePath'          => __DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/SourceClass.php.input',
         ]);
-        $command->assertExitCode(0)->expectsOutput('Generated test was written to /opt/project/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php')->execute();
+        $command->assertExitCode(0)->expectsOutput('Generated test was written to '.$this->projectDirectory.'/'.$this->pathToTest.'/Foo/Bar/Application/Barbar/Entity/FooTest.php')->execute();
 
         $requestObfuscatedText = self::getResponseBody($this->container);
 
-        $deObfuscatedTest = file_get_contents('/opt/project/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php');
-        $delete = @unlink('/opt/project/storage/tests/Unit/Foo/Bar/Application/Barbar/Entity/FooTest.php');
+        $deObfuscatedTest = file_get_contents($this->projectDirectory.'/'.$this->pathToTest.'/Foo/Bar/Application/Barbar/Entity/FooTest.php');
+        $delete = self::safeUnlink($this->projectDirectory.'/'.$this->pathToTest.'/Foo/Bar/Application/Barbar/Entity/FooTest.php');
         self::assertEquals($result, $deObfuscatedTest);
 
         self::actualize(__DIR__.'/Unit/Application/Obfuscator/Entity/Fixtures/ObfuscatedClass.php.expected', $requestObfuscatedText);
@@ -107,10 +123,10 @@ class NoObfuscateFileWriteTest extends TestCase
         ];
     }
 
-    public static function actualize(string $path, string $actual, $doIt = false): void
+    public function actualize(string $path, string $actual, $doIt = false): void
     {
         $dirCurrent = getcwd();
-        $fileExists = file_exists('/opt/project/.actualize');
+        $fileExists = file_exists($this->projectDirectory.'/.actualize');
         if ($doIt || $fileExists) {
             $done = self::updateExpected($path, $actual);
         }

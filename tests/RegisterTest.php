@@ -7,7 +7,6 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase;
 use PhpUniter\PackageLaravel\Application\PhpUnitUserRegisterService;
 use PhpUniter\PackageLaravel\Infrastructure\Integrations\PhpUniterRegistration;
@@ -18,7 +17,6 @@ use Symfony\Component\Console\Exception\RuntimeException;
 class RegisterTest extends TestCase
 {
     use CreatesApplicationPackageLaravel;
-    use RefreshDatabase;
 
     public $container = [];
 

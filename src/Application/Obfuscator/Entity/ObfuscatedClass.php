@@ -58,9 +58,4 @@ class ObfuscatedClass implements Obfuscated
     {
         return ($this->keyGenerator)->make();
     }
-
-    public function getObfuscated(): string
-    {
-        return $this->obfuscated;
-    }
 }

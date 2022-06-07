@@ -5,7 +5,9 @@ namespace PhpUniter\PackageLaravel;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use PhpUniter\PackageLaravel\Application\Generation\NamespaceGenerator;
+use PhpUniter\PackageLaravel\Application\Generation\PathCorrector;
 use PhpUniter\PackageLaravel\Application\Obfuscator\KeyGenerator\RandomMaker;
+use PhpUniter\PackageLaravel\Application\Obfuscator\ObfuscatorFabric;
 use PhpUniter\PackageLaravel\Application\Obfuscator\Preprocessor;
 use PhpUniter\PackageLaravel\Application\PhpUnitService;
 use PhpUniter\PackageLaravel\Application\Placer;
@@ -40,6 +42,10 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
 
     /**
      * Register the application services.
+     *
+     * @psalm-suppress MixedArgument
+     * @psalm-suppress MixedOperand
+     * @psalm-suppress InvalidScalarArgument
      */
     public function register()
     {
@@ -53,6 +59,10 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
 
         $this->app->bind(GenerateClient::class, function (Application $app) {
             return new GenerateClient();
+        });
+
+        $this->app->bind(ObfuscatorFabric::class, function (Application $app) {
+            return new ObfuscatorFabric();
         });
 
         $this->app->bind(Placer::class, function (Application $app) {
@@ -72,7 +82,7 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(NamespaceGenerator::class, function (Application $app) {
-            return new NamespaceGenerator(config('php-uniter.baseNamespace'), config('php-uniter.unitTestsDirectory'));
+            return new NamespaceGenerator(config('php-uniter.baseNamespace'), config('php-uniter.unitTestsDirectory'), $app->build(PathCorrector::class));
         });
 
         $this->app->bind(PhpUnitService::class, function (Application $app) {

@@ -20,4 +20,13 @@ trait CreatesApplicationPackageLaravel
 
         return $app;
     }
+
+    public static function safeUnlink(string $filePath): bool
+    {
+        if (file_exists($filePath)) {
+            return unlink($filePath);
+        }
+
+        return true;
+    }
 }
