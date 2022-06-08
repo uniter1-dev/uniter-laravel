@@ -5,12 +5,16 @@ You can install the package via composer:
 ```bash
 composer require php-uniter/php-uniter-laravel
 ```
+## Testing
+To run tests in package, you need to add
+"PhpUniter\\PackageLaravel\\Tests\\": "vendor/php-uniter/php-uniter-laravel/tests"
+to   "autoload-dev": "psr-4" section of your composer.json
 
 ## Usage
 
 ### User registration:
 ```php
-php-uniter:register {email} {password}
+php artisan php-uniter:register {email} {password}
 ```
 User will be registered, and access token will be sent to your email. You need to put that token to yours .env file as PHP_UNITER_ACCESS_TOKEN. After that you can send test generation queries.
 
@@ -23,7 +27,7 @@ PHP_UNITER_ACCESS_TOKEN=***
 ```
 Access token sent after registration to your email.
 
-Other options you may remain as defaults:
+Other options you may remain as defaults. Check that unit tests directory (defaults storage/tests/Unit) exists and is writable.
 
 ```bash
 PHP_UNITER_BASE_URL=https://uniter1.tech
