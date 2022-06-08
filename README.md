@@ -14,7 +14,7 @@ to   "autoload-dev": "psr-4" section of your composer.json
 
 ### User registration:
 ```php
-php-uniter:register {email} {password}
+php artisan php-uniter:register {email} {password}
 ```
 User will be registered, and access token will be sent to your email. You need to put that token to yours .env file as PHP_UNITER_ACCESS_TOKEN. After that you can send test generation queries.
 
