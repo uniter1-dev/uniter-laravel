@@ -110,7 +110,7 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
         $this->app->bind(RegisterRequest::class, function (Application $app) {
             return new RegisterRequest(
                 'POST',
-                config('php-uniter.baseUrl').'api/v1/registration/access-token',
+                config('php-uniter.baseUrl').'/api/v1/registration/access-token',
                 [
                     'accept'        => ['application/json'],
                     'timeout'       => 2,
