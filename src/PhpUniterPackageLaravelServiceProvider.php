@@ -34,9 +34,9 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
 
             // Registering package commands.
             $this->commands([
-                 GeneratePhpUniterTestCommand::class,
-                 RegisterPhpUniterUserCommand::class,
-             ]);
+                GeneratePhpUniterTestCommand::class,
+                RegisterPhpUniterUserCommand::class,
+            ]);
         }
     }
 
@@ -110,17 +110,14 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
         $this->app->bind(RegisterRequest::class, function (Application $app) {
             return new RegisterRequest(
                 'POST',
+
                 config('php-uniter.baseUrl').'/api/v1/registration/access-token',
+
                 [
                     'accept'        => ['application/json'],
                     'timeout'       => 2,
                 ]
             );
-        });
-
-        // Register the main class to use with the facade
-        $this->app->bind(PhpUnitTestHelper::class, function () {
-            return new PhpUnitTestHelper(config('php-uniter.projectDirectory'));
         });
     }
 }
