@@ -13,19 +13,12 @@ use PhpUniter\PackageLaravel\Infrastructure\Exception\ClassNotFound;
  */
 class PhpUnitTestHelper
 {
-    private string $projectRoot;
-
-    public function __construct(string $projectRoot)
-    {
-        $this->projectRoot = $projectRoot;
-    }
-
     /**
      * @param string $fullyQualifiedClassName Fully qualified class name with namespace
      *
      * @return string|null Fully qualified proxy class name with namespace or null
      */
-    public function makeAllMethodsPublic(string $fullyQualifiedClassName): ?string
+    public static function makeAllMethodsPublic(string $fullyQualifiedClassName): ?string
     {
         $classNameExploded = explode('\\', $fullyQualifiedClassName);
         $className = array_pop($classNameExploded);
@@ -33,11 +26,11 @@ class PhpUnitTestHelper
         $proxyClassName = "${className}".uniqid();
 
         try {
-            $proxyClassBody = $this->renderProxyClass($fullyQualifiedClassName, $className, $proxyClassName);
+            $proxyClassBody = self::renderProxyClass($fullyQualifiedClassName, $className, $proxyClassName);
 
-            $this->loadClass($proxyClassName, $proxyClassBody);
+            self::loadClass($proxyClassName, $proxyClassBody);
 
-            $fullyQualifiedProxyClassName = $this->getProxyClassName($classNameExploded, $proxyClassName);
+            $fullyQualifiedProxyClassName = self::getProxyClassName($classNameExploded, $proxyClassName);
         } catch (ClassNotFound $exception) {
             return null;
         }
@@ -49,10 +42,10 @@ class PhpUnitTestHelper
      * @throws ClassNotFound
      * @psalm-suppress UnresolvableInclude
      */
-    private function getClassBody(string $fullyQualifiedClassName): string
+    private static function getClassBody(string $fullyQualifiedClassName): string
     {
         /** @var ClassLoader $loader */
-        $loader = require $this->projectRoot.'/vendor/autoload.php';
+        $loader = require base_path().'/vendor/autoload.php';
 
         if ($classFilePath = $loader->findFile($fullyQualifiedClassName)) {
             if ($classBody = file_get_contents($classFilePath)) {
@@ -66,7 +59,7 @@ class PhpUnitTestHelper
     /**
      * @psalm-suppress UnresolvableInclude
      */
-    private function loadClass(string $proxyFileName, string $proxyClassBody): void
+    private static function loadClass(string $proxyFileName, string $proxyClassBody): void
     {
         $fileName = __DIR__."/${proxyFileName}.php";
 
@@ -90,9 +83,9 @@ class PhpUnitTestHelper
     /**
      * @throws ClassNotFound
      */
-    private function renderProxyClass(string $fullyQualifiedClassName, string $className, string $proxyClassName): string
+    private static function renderProxyClass(string $fullyQualifiedClassName, string $className, string $proxyClassName): string
     {
-        $classBody = $this->getClassBody($fullyQualifiedClassName);
+        $classBody = self::getClassBody($fullyQualifiedClassName);
 
         return preg_replace(
             ["/class\s+${className}/i", '/(|public|private|protected)\s+(static\s+)?function/i'],
