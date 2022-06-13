@@ -1,3 +1,13 @@
+## Short instruction
+composer require php-uniter/php-uniter-laravel
+php artisan php-uniter:register {email} {password}
+
+// edit .env file
+// PHP_UNITER_ACCESS_TOKEN= token from your mail
+// PROJECT_DIRECTORY= path to project root
+
+php artisan php-uniter:generate {filePath}
+
 ## Installation
 
 You can install the package via composer:
