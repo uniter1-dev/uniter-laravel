@@ -44,12 +44,15 @@ class PhpUnitTestHelper
      */
     private static function getClassBody(string $fullyQualifiedClassName): string
     {
-        /** @var ClassLoader $loader */
-        $loader = require base_path().'/vendor/autoload.php';
+        $path = realpath(self::loadPath());
+        if ($path) {
+            /** @var ClassLoader $loader */
+            $loader = require $path;
 
-        if ($classFilePath = $loader->findFile($fullyQualifiedClassName)) {
-            if ($classBody = file_get_contents($classFilePath)) {
-                return $classBody;
+            if ($classFilePath = $loader->findFile($fullyQualifiedClassName)) {
+                if ($classBody = file_get_contents($classFilePath)) {
+                    return $classBody;
+                }
             }
         }
 
@@ -92,5 +95,10 @@ class PhpUnitTestHelper
             ["class $proxyClassName", 'public $2function'],
             $classBody
         );
+    }
+
+    private static function loadPath(): string
+    {
+        return (string) env('PROJECT_DIRECTORY') ? (string) env('PROJECT_DIRECTORY').'/vendor/autoload.php' : (__DIR__.'/../../../autoload.php');
     }
 }
