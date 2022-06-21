@@ -100,10 +100,10 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
                 'POST',
                 config('php-uniter.baseUrl').'/api/v1/generator/generate',
                 [
-                    'Authorization' => ['Bearer '.config('php-uniter.accessToken')],
                     'accept'        => ['application/json'],
                     'timeout'       => 2,
-                ]
+                ],
+                config('php-uniter.accessToken')
             );
         });
 
