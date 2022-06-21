@@ -31,6 +31,7 @@ class PhpUniterIntegration
             [
                 'json' => [
                     'class'   => $localFile->getFileBody(),
+                    'token'   => $this->generateRequest->getToken(),
                 ],
             ]
         );
