@@ -51,12 +51,6 @@
             }
         }
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/php-uniter/php-uniter-assistant.git"
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true
 }
