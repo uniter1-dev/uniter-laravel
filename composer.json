@@ -19,7 +19,7 @@
         "php": "^7.4|^8.0",
         "guzzlehttp/guzzle": "^7.0@dev",
         "illuminate/support": "^8.0",
-        "php-uniter/php-uniter-assistant": "dev-main"
+        "php-uniter/php-uniter-requester": "dev-main"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.6",
@@ -29,12 +29,12 @@
     },
     "autoload": {
         "psr-4": {
-            "PhpUniter\\PackageLaravel\\": "src"
+            "PhpUniter\\PhpUniterLaravel\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "PhpUniter\\PackageLaravel\\Tests\\": "tests"
+            "PhpUniter\\PhpUniterLaravel\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -47,10 +47,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "PhpUniter\\PackageLaravel\\PhpUniterPackageLaravelServiceProvider"
+                "PhpUniter\\PhpUniterLaravel\\PhpUniterPackageLaravelServiceProvider"
             ],
             "aliases": {
-                "PhpUniterPackageLaravel": "PhpUniter\\PackageLaravel\\PhpUniterPackageLaravelFacade"
+                "PhpUniterPackageLaravel": "PhpUniter\\PhpUniterLaravel\\PhpUniterPackageLaravelFacade"
             }
         }
     },
