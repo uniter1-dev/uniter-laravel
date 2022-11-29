@@ -18,7 +18,6 @@
     "require": {
         "php": "^7.4|^8.0",
         "guzzlehttp/guzzle": "^7.0@dev",
-        "illuminate/support": "^8.0",
         "php-uniter/php-uniter-requester": "dev-main"
     },
     "require-dev": {
