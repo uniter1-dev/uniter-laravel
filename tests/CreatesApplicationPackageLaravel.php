@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpUniter\PackageLaravel\Tests;
+namespace PhpUniter\PhpUniterLaravel\Tests;
 
 use Illuminate\Contracts\Console\Kernel;
 
@@ -29,4 +29,5 @@ trait CreatesApplicationPackageLaravel
 
         return true;
     }
+
 }

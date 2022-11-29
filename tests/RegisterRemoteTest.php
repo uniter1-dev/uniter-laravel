@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpUniter\PackageLaravel\Tests;
+namespace PhpUniter\PhpUniterLaravel\Tests;
 
 use Illuminate\Foundation\Testing\TestCase;
 use Symfony\Component\Console\Exception\RuntimeException;

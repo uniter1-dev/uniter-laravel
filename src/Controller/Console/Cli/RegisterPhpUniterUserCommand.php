@@ -1,12 +1,11 @@
 <?php
 
-namespace PhpUniter\PackageLaravel\Controller\Console\Cli;
+namespace PhpUniter\PhpUniterLaravel\Controller\Console\Cli;
 
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use PhpUniter\PackageLaravel\Application\PhpUnitUserRegisterService;
+use PhpUniter\PhpUniterLaravel\LaravelRequester;
 use Throwable;
 
 class RegisterPhpUniterUserCommand extends Command
@@ -22,12 +21,12 @@ class RegisterPhpUniterUserCommand extends Command
     /**
      * The console command description.
      */
-    protected $description = 'Register PhpUniter user';
+    protected $description = 'Generate phpunit test';
 
     /**
      * Execute the console command.
      */
-    public function handle(PhpUnitUserRegisterService $registerService): ?int
+    public function handle(LaravelRequester $laravelRequester): ?int
     {
         try {
             $email = $this->argument('email');
@@ -48,15 +47,13 @@ class RegisterPhpUniterUserCommand extends Command
                 throw new ValidationException($validator);
             }
 
-            if ($registerService->process($email, $password)) {
+            $code = $laravelRequester->register($email, $password);
+
+            if (0 === $code) {
                 $this->info('User registered. Access token in your email. Put it in .env file - PHP_UNITER_ACCESS_TOKEN');
             }
         } catch (ValidationException $e) {
             $this->error("Command Validation Error: \n".$this->listMessages($e->errors()));
-
-            return 1;
-        } catch (GuzzleException $e) {
-            $this->error($e->getMessage());
 
             return 1;
         } catch (Throwable $e) {
@@ -65,19 +62,14 @@ class RegisterPhpUniterUserCommand extends Command
             return 1;
         }
 
-        return 0;
-    }
-
-    /**
-     * @param string[] $messages
-     */
-    public function listMessages(array $messages): string
-    {
-        $res = '';
-        foreach ($messages as $key=>$item) {
-            $res .= $key.' => '.implode(' ', array_values($item))."\n";
+        $report = $laravelRequester->getReport();
+        foreach ($report->getErrors() as $message) {
+            $this->error($message);
+        }
+        foreach ($report->getInfos() as $message) {
+            $this->info($message);
         }
 
-        return $res;
+        return $code;
     }
 }

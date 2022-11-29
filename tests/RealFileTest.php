@@ -5,7 +5,7 @@ namespace PhpUniter\PhpUniterLaravel\Tests;
 use Illuminate\Foundation\Testing\TestCase;
 use Symfony\Component\Console\Exception\RuntimeException;
 
-class EmptyFileMockTest extends TestCase
+class RealFileTest extends TestCase
 {
     use CreatesApplicationPackageLaravel;
 
