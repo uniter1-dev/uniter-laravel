@@ -5,7 +5,6 @@ namespace PhpUniter\PhpUniterLaravel\Controller\Console\Cli;
 use Illuminate\Console\Command;
 use PhpUniter\PhpUniterLaravel\LaravelRequester;
 
-
 class GeneratePhpUniterTestCommand extends Command
 {
     /**
@@ -28,9 +27,26 @@ class GeneratePhpUniterTestCommand extends Command
     {
         try {
             $filePath = $this->argument('filePath');
+
+            if (empty($filePath)) {
+                $this->error('No file path in command params');
+
+                return 1;
+            }
+
             $code = $laravelRequester->generate($filePath);
         } catch (\Exception $e) {
+            $this->error($e->getMessage());
+
             return 1;
+        }
+
+        $report = $laravelRequester->getReport();
+        foreach ($report->getErrors() as $message) {
+            $this->error($message);
+        }
+        foreach ($report->getInfos() as $message) {
+            $this->info($message);
         }
 
         return $code;
