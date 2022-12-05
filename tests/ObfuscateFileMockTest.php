@@ -73,14 +73,8 @@ class ObfuscateFileMockTest extends TestCase
             'filePath'          => __DIR__.'/Fixtures/SourceClass.php.input',
         ])->execute();
 
-        //$requestObfuscatedText = self::getResponseBody($this->container);
         $deObfuscatedTest = $fakeRepository->getFile('FooTest.php');
-
-        //self::actualize(__DIR__.'/Fixtures/ObfuscatedClass.php.expected', $requestObfuscatedText);
-        self::actualize(__DIR__.'/Fixtures/Deobfuscated.test.expected', $deObfuscatedTest);
-
         self::assertEquals(0, $res);
-        //self::assertEquals($obfExpected, $requestObfuscatedText);
         self::assertEquals($result, $deObfuscatedTest);
     }
 
@@ -112,14 +106,6 @@ class ObfuscateFileMockTest extends TestCase
         ];
     }
 
-    public static function actualize(string $path, string $actual, $doIt = false): void
-    {
-        $dirCurrent = getcwd();
-        $fileExists = file_exists('/opt/project/.actualize');
-        if ($doIt || $fileExists) {
-            $done = self::updateExpected($path, $actual);
-        }
-    }
 
     public static function updateExpected(string $path, string $actual)
     {
