@@ -8,7 +8,6 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\TestCase;
-use PhpUniter\External\Conf;
 use PhpUniter\PhpUniterRequester\Application\Generation\NamespaceGenerator;
 use PhpUniter\PhpUniterRequester\Application\Generation\UseGenerator;
 use PhpUniter\PhpUniterRequester\Application\Obfuscator\KeyGenerator\StableMaker;
@@ -74,6 +73,7 @@ class ObfuscateFileMockTest extends TestCase
         ])->execute();
 
         $deObfuscatedTest = $fakeRepository->getFile('FooTest.php');
+
         self::assertEquals(0, $res);
         self::assertEquals($result, $deObfuscatedTest);
     }

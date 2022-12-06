@@ -11,7 +11,6 @@ use PhpUniter\PhpUniterRequester\Application\Generation\PathCorrector;
 use PhpUniter\PhpUniterRequester\Application\Generation\UseGenerator;
 use PhpUniter\PhpUniterRequester\Application\Obfuscator\KeyGenerator\ObfuscateNameMaker;
 use PhpUniter\PhpUniterRequester\Application\Obfuscator\KeyGenerator\RandomMaker;
-use PhpUniter\PhpUniterRequester\Application\Obfuscator\Preprocessor;
 use PhpUniter\PhpUniterRequester\Application\PhpUnitService;
 use PhpUniter\PhpUniterRequester\Application\PhpUnitUserRegisterService;
 use PhpUniter\PhpUniterRequester\Application\Placer;
@@ -22,7 +21,7 @@ use PhpUniter\PhpUniterRequester\Infrastructure\Request\GenerateClient;
 use PhpUniter\PhpUniterRequester\Infrastructure\Request\GenerateRequest;
 use PhpUniter\PhpUniterRequester\Infrastructure\Request\RegisterRequest;
 
-class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
+class PhpUniterPackageLaravelRequesterServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -52,10 +51,6 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'php-uniter');
-
-        $this->app->bind(Preprocessor::class, function (Application $app) {
-            return new Preprocessor(config('php-uniter.preprocess'));
-        });
 
         $this->app->bind(GenerateClient::class, function () {
             return new GenerateClient();
@@ -147,7 +142,6 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             return new LaravelRequester(
                 $this->app->get(PhpUnitUserRegisterService::class),
                 $this->app->get(PhpUnitService::class),
-                $this->app->get(Preprocessor::class),
                 config('php-uniter.projectDirectory')
             );
         });
