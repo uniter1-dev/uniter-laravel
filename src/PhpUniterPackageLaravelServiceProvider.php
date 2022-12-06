@@ -21,7 +21,7 @@ use PhpUniter\PhpUniterRequester\Infrastructure\Request\GenerateClient;
 use PhpUniter\PhpUniterRequester\Infrastructure\Request\GenerateRequest;
 use PhpUniter\PhpUniterRequester\Infrastructure\Request\RegisterRequest;
 
-class PhpUniterPackageLaravelRequesterServiceProvider extends ServiceProvider
+class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
