@@ -1,27 +1,27 @@
 <?php
 
-namespace PhpUniter\PhpUniterLaravel;
+namespace Uniter1\UniterLaravel;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
-use PhpUniter\PhpUniterLaravel\Controller\Console\Cli\GeneratePhpUniterTestCommand;
-use PhpUniter\PhpUniterLaravel\Controller\Console\Cli\RegisterPhpUniterUserCommand;
-use PhpUniter\PhpUniterRequester\Application\Generation\NamespaceGenerator;
-use PhpUniter\PhpUniterRequester\Application\Generation\PathCorrector;
-use PhpUniter\PhpUniterRequester\Application\Generation\UseGenerator;
-use PhpUniter\PhpUniterRequester\Application\Obfuscator\KeyGenerator\ObfuscateNameMaker;
-use PhpUniter\PhpUniterRequester\Application\Obfuscator\KeyGenerator\RandomMaker;
-use PhpUniter\PhpUniterRequester\Application\PhpUnitService;
-use PhpUniter\PhpUniterRequester\Application\PhpUnitUserRegisterService;
-use PhpUniter\PhpUniterRequester\Application\Placer;
-use PhpUniter\PhpUniterRequester\Infrastructure\Integrations\PhpUniterIntegration;
-use PhpUniter\PhpUniterRequester\Infrastructure\Integrations\PhpUniterRegistration;
-use PhpUniter\PhpUniterRequester\Infrastructure\Repository\UnitTestRepository;
-use PhpUniter\PhpUniterRequester\Infrastructure\Request\GenerateClient;
-use PhpUniter\PhpUniterRequester\Infrastructure\Request\GenerateRequest;
-use PhpUniter\PhpUniterRequester\Infrastructure\Request\RegisterRequest;
+use Uniter1\UniterLaravel\Controller\Console\Cli\GenerateUniterTestCommand;
+use Uniter1\UniterLaravel\Controller\Console\Cli\RegisterUniterUserCommand;
+use Uniter1\UniterRequester\Application\Generation\NamespaceGenerator;
+use Uniter1\UniterRequester\Application\Generation\PathCorrector;
+use Uniter1\UniterRequester\Application\Generation\UseGenerator;
+use Uniter1\UniterRequester\Application\Obfuscator\KeyGenerator\ObfuscateNameMaker;
+use Uniter1\UniterRequester\Application\Obfuscator\KeyGenerator\RandomMaker;
+use Uniter1\UniterRequester\Application\PhpUnitService;
+use Uniter1\UniterRequester\Application\PhpUnitUserRegisterService;
+use Uniter1\UniterRequester\Application\Placer;
+use Uniter1\UniterRequester\Infrastructure\Integrations\PhpUniterIntegration;
+use Uniter1\UniterRequester\Infrastructure\Integrations\PhpUniterRegistration;
+use Uniter1\UniterRequester\Infrastructure\Repository\UnitTestRepository;
+use Uniter1\UniterRequester\Infrastructure\Request\GenerateClient;
+use Uniter1\UniterRequester\Infrastructure\Request\GenerateRequest;
+use Uniter1\UniterRequester\Infrastructure\Request\RegisterRequest;
 
-class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
+class PhpUniterPackageLaravelRequesterServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -30,13 +30,13 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('php-uniter.php'),
+                __DIR__.'/../config/config.php' => config_path('uniter1.php'),
             ], 'config');
 
             // Registering package commands.
             $this->commands([
-                GeneratePhpUniterTestCommand::class,
-                RegisterPhpUniterUserCommand::class,
+                GenerateUniterTestCommand::class,
+                RegisterUniterUserCommand::class,
             ]);
         }
     }
@@ -50,7 +50,7 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'php-uniter');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'uniter1');
 
         $this->app->bind(GenerateClient::class, function () {
             return new GenerateClient();
@@ -59,7 +59,7 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
         $this->app->bind(RegisterRequest::class, function (Application $app) {
             return  new RegisterRequest(
             'POST',
-            config('php-uniter.baseUrl').config('php-uniter.registrationPath'),
+            config('uniter1.baseUrl').config('uniter1.registrationPath'),
             [
                 'accept'        => ['application/json'],
                 'timeout'       => 2,
@@ -81,12 +81,12 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
         $this->app->bind(GenerateRequest::class, function () {
             return new GenerateRequest(
             'POST',
-            config('php-uniter.baseUrl').config('php-uniter.generationPath'),
+            config('uniter1.baseUrl').config('uniter1.generationPath'),
             [
                 'accept'        => ['application/json'],
                 'timeout'       => 2,
             ],
-            config('php-uniter.accessToken')
+            config('uniter1.accessToken')
             );
         });
 
@@ -98,7 +98,7 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(UnitTestRepository::class, function () {
-            return new UnitTestRepository(config('php-uniter.projectDirectory'));
+            return new UnitTestRepository(config('uniter1.projectDirectory'));
         });
 
         $this->app->bind(Placer::class, function () {
@@ -116,13 +116,13 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
         });
 
         $this->app->bind(UseGenerator::class, function () {
-            return new UseGenerator(config('php-uniter.helperClass'));
+            return new UseGenerator(config('uniter1.helperClass'));
         });
 
         $this->app->bind(NamespaceGenerator::class, function () {
             return new NamespaceGenerator(
-                config('php-uniter.baseNamespace'),
-                config('php-uniter.unitTestsDirectory'),
+                config('uniter1.baseNamespace'),
+                config('uniter1.unitTestsDirectory'),
                 $this->app->get(PathCorrector::class)
             );
         });
@@ -134,7 +134,7 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
                 $this->app->get(ObfuscateNameMaker::class),
                 $this->app->get(NamespaceGenerator::class),
                 $this->app->get(UseGenerator::class),
-                config('php-uniter.obfuscate'),
+                config('uniter1.obfuscate'),
             );
         });
 
@@ -142,7 +142,7 @@ class PhpUniterPackageLaravelServiceProvider extends ServiceProvider
             return new LaravelRequester(
                 $this->app->get(PhpUnitUserRegisterService::class),
                 $this->app->get(PhpUnitService::class),
-                config('php-uniter.projectDirectory')
+                config('uniter1.projectDirectory')
             );
         });
     }

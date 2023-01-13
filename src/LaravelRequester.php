@@ -1,10 +1,9 @@
 <?php
 
-namespace PhpUniter\PhpUniterLaravel;
+namespace Uniter1\UniterLaravel;
 
-use PhpUniter\PhpUniterRequester\Requester;
+use Uniter1\UniterRequester\Requester;
 
 class LaravelRequester extends Requester
 {
-
 }

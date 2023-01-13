@@ -1,19 +1,19 @@
 <?php
 
-namespace PhpUniter\PhpUniterLaravel\Controller\Console\Cli;
+namespace Uniter1\UniterLaravel\Controller\Console\Cli;
 
 use Illuminate\Console\Command;
-use PhpUniter\PhpUniterLaravel\LaravelRequester;
+use Uniter1\UniterLaravel\LaravelRequester;
 
-class GeneratePhpUniterTestCommand extends Command
+class GenerateUniterTestCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'php-uniter:generate {filePath}';
-    protected $name = 'php-uniter:generate';
+    protected $signature = 'uniter1:generate {filePath}';
+    protected $name = 'uniter1:generate';
 
     /**
      * The console command description.

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpUniter\PhpUniterLaravel\Tests;
+namespace Uniter1\UniterLaravel\Tests;
 
 use Illuminate\Foundation\Testing\TestCase;
 
@@ -15,7 +15,7 @@ class CommandFileWriteTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->pathToTest = (string) config('php-uniter.unitTestsDirectory');
+        $this->pathToTest = (string) config('uniter1.unitTestsDirectory');
         $this->projectRoot = base_path();
     }
 

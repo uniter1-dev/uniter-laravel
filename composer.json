@@ -5,7 +5,7 @@
         "php-uniter",
         "php-uniter-laravel"
     ],
-    "homepage": "https://github.com/php-uniter/php-uniter-laravel.git",
+    "homepage": "https://github.com/uniter1/uniter-laravel.git",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -18,7 +18,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "guzzlehttp/guzzle": "^7.0@dev",
-        "php-uniter/php-uniter-requester": "^1.1"
+        "uniter1/uniter-requester": "^1.1"
     },
     "require-dev": {
         "mockery/mockery": "^1.5",
@@ -27,12 +27,12 @@
     },
     "autoload": {
         "psr-4": {
-            "PhpUniter\\PhpUniterLaravel\\": "src"
+            "Uniter1\\UniterLaravel\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "PhpUniter\\PhpUniterLaravel\\Tests\\": "tests"
+            "Uniter1\\UniterLaravel\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -45,10 +45,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "PhpUniter\\PhpUniterLaravel\\PhpUniterPackageLaravelServiceProvider"
+                "Uniter1\\UniterLaravel\\PhpUniterPackageLaravelServiceProvider"
             ],
             "aliases": {
-                "PhpUniterPackageLaravel": "PhpUniter\\PhpUniterLaravel\\PhpUniterPackageLaravelFacade"
+                "Uniter1PackageLaravel": "Uniter1\\UniterLaravel\\PhpUniterPackageLaravelFacade"
             }
         }
     },

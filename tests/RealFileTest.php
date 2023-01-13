@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpUniter\PhpUniterLaravel\Tests;
+namespace Uniter1\UniterLaravel\Tests;
 
 use Illuminate\Foundation\Testing\TestCase;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -11,7 +11,7 @@ class RealFileTest extends TestCase
 
     public function testCommand(): void
     {
-        $command = $this->artisan('php-uniter:generate', []);
+        $command = $this->artisan('uniter1:generate', []);
         $this->expectException(RuntimeException::class);
         $command->run();
     }
