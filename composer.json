@@ -45,7 +45,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Uniter1\\UniterLaravel\\PhpUniterPackageLaravelServiceProvider"
+                "Uniter1\\UniterLaravel\\Uniter1PackageLaravelServiceProvider"
             ],
             "aliases": {
                 "Uniter1PackageLaravel": "Uniter1\\UniterLaravel\\PhpUniterPackageLaravelFacade"
