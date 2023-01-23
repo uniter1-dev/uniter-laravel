@@ -21,7 +21,7 @@ class RegisterUniterUserCommand extends Command
     /**
      * The console command description.
      */
-    protected $description = 'Generate phpunit test';
+    protected $description = 'Registration';
 
     /**
      * Execute the console command.

@@ -127,14 +127,20 @@ class Uniter1PackageLaravelServiceProvider extends ServiceProvider
             );
         });
 
-        $this->app->bind(PhpUnitService::class, function () {
+        $options = [
+            'toObfuscate'   => config('uniter1.obfuscate'),
+            'inspectorMode' => config('uniter1.inspectorMode'),
+            'useDependent'  => config('uniter1.useDependent'),
+            ];
+
+        $this->app->bind(PhpUnitService::class, function () use ($options) {
             return new PhpUnitService(
                 $this->app->get(PhpUniterIntegration::class),
                 $this->app->get(Placer::class),
                 $this->app->get(ObfuscateNameMaker::class),
                 $this->app->get(NamespaceGenerator::class),
                 $this->app->get(UseGenerator::class),
-                config('uniter1.obfuscate'),
+                $options,
             );
         });
 
