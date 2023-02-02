@@ -64,13 +64,15 @@ if true, private and protected methods will be tested. If false, none.
 
 ### Test generation
 ```bash
-php artisan uniter1:generate {filePath}
+php artisan uniter1:generate {filePath} [{--overwrite-one-method=yours_method_name}]
 ```
 Your class you want to test will be read from {filePath}, obfuscated if you did not turn obfuscation off, sent to our service. There will be created some phpunit test file to test different variants of yours class methods. The result will be deobfuscated and saved to UNITER1_UNIT_TESTS_DIRECTORY - to some nested folder according to class namespace.
 
 Open it, read it and use to test yours class.
 
 Generated class, possibly, will not be completed test - read comments before each generated test method.
+
+overwrite-one-method option allows you to replace only those methods that test one of the methods of the source class in the previously generated test class during generation. Be careful when using it - it is necessary that the previously generated test lies at the same address, and also that no changes are made to the class under test, except for the method that we specified with this option.
 
 ### Testing
 
@@ -84,4 +86,4 @@ If you discover any security related issues, please email support@uniter1.tech i
 
 -   [PhpUniter](https://github.com/uniter1)
 
-## v1.0.3
+## v1.9
