@@ -1,46 +1,59 @@
 <?php
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use _obf373938\_obf373839;
+
+/**
+* @see _obf373839
+*/
 class _obf373839Test extends MockeryTestCase
 {
     /**
-    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373930, injection: self::_obf373935
-    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373930, injection: foo("arg1", "arg2", 10)
+    * @see _obf373839::_obf373930()
+    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373930, flow: , injection: self::_obf373935
+    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373930, flow: , injection: foo("arg1", "arg2", 10)
     */
-    public function test__obf373930()
+    public function test_obf373930()
     {
-        $privateMethodClass = ClassHelper::makeAllMethodsPublic('_obf373938\\_obf373839');
-        $selfObject_obf373839 = Mockery::mock($privateMethodClass)->makePartial();
-        $this->assertEquals('PLACEHOLDER_ASSERT_RETURN', $selfObject_obf373839->_obf373930('PLACEHOLDER_ASSERT_v', 'PLACEHOLDER_ASSERT_w'));
+        /** @var _obf373839 $privateMethodClass */
+        $privateMethodClass = PhpUnitTestHelper::makeAllMethodsPublic(_obf373839::class);
+        $_obf373839 = Mockery::mock($privateMethodClass)->makePartial();
+        $this->assertEquals(EXPECTED_RETURN, $_obf373839->_obf373930(ARG_v, ARG_w));
     }
     /**
-    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373931, injection: explode(",", $x)
-    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373931, injection: fTwo($argA, $argB, $argC, fThree($argD, $argE, $argF, $argG, $argH))
-    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373931, injection: count($colors)
+    * @see _obf373839::_obf373931()
+    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373931, flow: 1, injection: explode(",", $x)
+    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373931, flow: 1, injection: fTwo($argA, $argB, $argC, fThree($argD, $argE, $argF, $argG, $argH))
+    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373931, flow: 1, injection: count($colors)
     */
-    public function test__obf373931()
+    public function test_obf3739311()
     {
-        $privateMethodClass = ClassHelper::makeAllMethodsPublic('_obf373938\\_obf373839');
-        $selfObject_obf373839 = Mockery::mock($privateMethodClass)->makePartial();
-        $this->assertEquals('PLACEHOLDER_ASSERT_RETURN', $selfObject_obf373839->_obf373931('PLACEHOLDER_ASSERT_argA', 'PLACEHOLDER_ASSERT_argB', 'PLACEHOLDER_ASSERT_argC', 'PLACEHOLDER_ASSERT_argD', 'PLACEHOLDER_ASSERT_argE', 'PLACEHOLDER_ASSERT_argF', 'PLACEHOLDER_ASSERT_argG', 'PLACEHOLDER_ASSERT_argH'));
+        /** @var _obf373839 $privateMethodClass */
+        $privateMethodClass = PhpUnitTestHelper::makeAllMethodsPublic(_obf373839::class);
+        $_obf373839 = Mockery::mock($privateMethodClass)->makePartial();
+        $this->assertEquals(EXPECTED_RETURN, $_obf373839->_obf373931(ARG_argA, ARG_argB, ARG_argC, ARG_argD, ARG_argE, ARG_argF, ARG_argG, ARG_argH));
     }
     /**
-    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373932, injection: $foo->one("a", "b")->two("c", "d", "e")->three("fg")->four()
-    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373932, injection: a()->b()->c()
+    * @see _obf373839::_obf373932()
     */
-    public function test__obf373932()
+    public function test_obf3739321()
     {
-        $privateMethodClass = ClassHelper::makeAllMethodsPublic('_obf373938\\_obf373839');
-        $selfObject_obf373839 = Mockery::mock($privateMethodClass)->makePartial();
-        $this->assertEquals('PLACEHOLDER_ASSERT_RETURN', $selfObject_obf373839->_obf373932('PLACEHOLDER_ASSERT_strA', 'PLACEHOLDER_ASSERT_strB', 'PLACEHOLDER_ASSERT_strC', 'PLACEHOLDER_ASSERT_strD'));
+        /** @var _obf373839 $privateMethodClass */
+        $privateMethodClass = PhpUnitTestHelper::makeAllMethodsPublic(_obf373839::class);
+        $_obf373839 = Mockery::mock($privateMethodClass)->makePartial();
+        $this->assertEquals(EXPECTED_RETURN, $_obf373839->_obf373932(ARG_strA, ARG_strB, ARG_strC, ARG_strD));
     }
     /**
-    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373933, injection: foo()
+    * @see _obf373839::_obf373932()
+    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373932, flow: 0, injection: $foo->one("a", "b")->two("c", "d", "e")->three("fg")->four()
+    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373932, flow: 0, injection: a()->b()->c()
     */
-    public function test__obf373933()
+    public function test_obf3739320()
     {
-        $privateMethodClass = ClassHelper::makeAllMethodsPublic('_obf373938\\_obf373839');
-        $selfObject_obf373839 = Mockery::mock($privateMethodClass)->makePartial();
-        $this->assertEquals('PLACEHOLDER_ASSERT_RETURN', $selfObject_obf373839->_obf373933('PLACEHOLDER_ASSERT_strA', 'PLACEHOLDER_ASSERT_strB', 'PLACEHOLDER_ASSERT_strC', 'PLACEHOLDER_ASSERT_strD', 'PLACEHOLDER_ASSERT_strE'));
+        /** @var _obf373839 $privateMethodClass */
+        $privateMethodClass = PhpUnitTestHelper::makeAllMethodsPublic(_obf373839::class);
+        $_obf373839 = Mockery::mock($privateMethodClass)->makePartial();
+        $this->assertEquals(EXPECTED_RETURN, $_obf373839->_obf373932(ARG_strA, ARG_strB, ARG_strC, ARG_strD));
     }
 }

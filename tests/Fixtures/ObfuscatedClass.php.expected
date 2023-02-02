@@ -56,17 +56,5 @@ abstract class _obf373839 extends FooBaseClass implements Bar1, Bar2, Bar3
         return $strD;
     }
 
-    function _obf373933($strA, $strB, $strC, $strD, $strE)
-    {
-        try {
-        } catch (Exception $e) {
-            foo();
-        } finally {
-            // do something
-        }
-        return $strA + $strB + $strC + $strD + $strE;
-    }
-
-    protected abstract function _obf373934();
 
 }

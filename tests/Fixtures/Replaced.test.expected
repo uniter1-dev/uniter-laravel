@@ -24,9 +24,9 @@ class FooTest extends MockeryTestCase
         $Foo = Mockery::mock($privateMethodClass)->makePartial();
         $this->assertEquals(EXPECTED_RETURN, $Foo->bar(ARG_v, ARG_w));
     }
-    /**
+   /**
     * @see Foo::fOne()
-    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: Foo, method: fOne, flow: 1, injection: explode(",", $x)
+    * -- @uniter_chain_wrong_type Unknown type for injection chain. Context: class: Foo, method: fOne, flow: 1, injection: explode(",", $x)
     * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: Foo, method: fOne, flow: 1, injection: fTwo($argA, $argB, $argC, fThree($argD, $argE, $argF, $argG, $argH))
     * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: Foo, method: fOne, flow: 1, injection: count($colors)
     */
@@ -39,6 +39,7 @@ class FooTest extends MockeryTestCase
     }
     /**
     * @see Foo::fTwo()
+    * --
     */
     public function testFTwo1()
     {

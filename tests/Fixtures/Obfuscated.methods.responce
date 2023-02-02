@@ -1,0 +1,26 @@
+   /**
+    * @see _obf373839::_obf373931()
+    * -- @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373931, flow: 1, injection: explode(",", $x)
+    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373931, flow: 1, injection: fTwo($argA, $argB, $argC, fThree($argD, $argE, $argF, $argG, $argH))
+    * @uniter_chain_wrong_type Unknown type for injection chain. Context: class: _obf373839, method: _obf373931, flow: 1, injection: count($colors)
+    */
+    public function test_obf3739311()
+    {
+        /** @var _obf373839 $privateMethodClass */
+        $privateMethodClass = PhpUnitTestHelper::makeAllMethodsPublic(_obf373839::class);
+        $_obf373839 = Mockery::mock($privateMethodClass)->makePartial();
+        $this->assertEquals(EXPECTED_RETURN, $_obf373839->_obf373931(ARG_argA, ARG_argB, ARG_argC, ARG_argD, ARG_argE, ARG_argF, ARG_argG, ARG_argH));
+    }
+
+
+    /**
+    * @see _obf373839::_obf373932()
+    * --
+    */
+    public function test_obf3739321()
+    {
+        /** @var _obf373839 $privateMethodClass */
+        $privateMethodClass = PhpUnitTestHelper::makeAllMethodsPublic(_obf373839::class);
+        $_obf373839 = Mockery::mock($privateMethodClass)->makePartial();
+        $this->assertEquals(EXPECTED_RETURN, $_obf373839->_obf373932(ARG_strA, ARG_strB, ARG_strC, ARG_strD));
+    }

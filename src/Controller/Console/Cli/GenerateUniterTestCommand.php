@@ -12,7 +12,7 @@ class GenerateUniterTestCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'uniter1:generate {filePath}';
+    protected $signature = 'uniter1:generate {filePath} {--overwrite-one-method=}';
     protected $name = 'uniter1:generate';
 
     /**
@@ -27,6 +27,7 @@ class GenerateUniterTestCommand extends Command
     {
         try {
             $filePath = $this->argument('filePath');
+            $overwrite = (string) $this->option('overwrite-one-method');
 
             if (empty($filePath)) {
                 $this->error('No file path in command params');
@@ -34,7 +35,7 @@ class GenerateUniterTestCommand extends Command
                 return 1;
             }
 
-            $code = $laravelRequester->generate($filePath);
+            $code = $laravelRequester->generate($filePath, $overwrite);
         } catch (\Exception $e) {
             $this->error($e->getMessage());
 
